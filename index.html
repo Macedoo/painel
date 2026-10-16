@@ -907,7 +907,7 @@ function homeTile(d) {
   nm.appendChild(el('i', null, homeIcon(d.name)));
   nm.appendChild(document.createTextNode(d.name));
   b.appendChild(nm);
-  b.appendChild(el('span', 'hm-s', d.online === false ? 'Sem ligação' : d.on ? (d.canBright && d.brightness != null ? 'Ligado · ' + d.brightness + '%' : 'Ligado') : 'Desligado'));
+  b.appendChild(el('span', 'hm-s', d.online === false ? 'Sem ligação' : d.on ? (d.canBright && d.brightness != null ? 'Ligado · ' + Math.round(d.brightness / (d.bmax || 100) * 100) + '%' : 'Ligado') : 'Desligado'));
   b.addEventListener('click', function () { homeToggle(d); });
   t.appendChild(b);
   if (d.canBright && d.on && d.online !== false) {
