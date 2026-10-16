@@ -131,6 +131,26 @@ h2{font-size:.72rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase
 .nitem:active{background:var(--card2)}
 .nw-m{position:fixed;inset:0;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;z-index:9}
 .nw-m[hidden]{display:none}
+.wx{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.wx-b{background:var(--card);border-radius:1rem;padding:1.1rem 1.3rem;width:min(40rem,94vw);max-height:92vh;overflow:auto;display:flex;flex-direction:column;gap:.8rem}
+.wx-h{display:flex;align-items:center;gap:.9rem}
+.wx-h .ic{font-size:3.4rem;line-height:1}
+.wx-h .tp{font-size:3.2rem;font-weight:300;line-height:1}
+.wx-h .ds{color:var(--muted);font-size:1rem;line-height:1.4;flex:1}
+.wx-h button{font:inherit;color:var(--fg);background:var(--card2);border:0;padding:.5rem .95rem;border-radius:.5rem;font-size:.95rem;cursor:pointer;align-self:flex-start}
+.wx-g{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem}
+.wx-g div{background:var(--card2);border-radius:.7rem;padding:.5rem .7rem;font-size:.78rem;color:var(--muted);line-height:1.35}
+.wx-g b{display:block;font-weight:500;font-size:1.1rem;color:var(--fg)}
+.wx-d{display:flex;flex-direction:column}
+.wx-r{display:grid;grid-template-columns:4.4rem 2rem 1fr 6.2rem 3.4rem 3.2rem;gap:.5rem;align-items:center;padding:.5rem .1rem;border-bottom:1px solid var(--line);font-size:.92rem}
+.wx-r:last-child{border-bottom:0}
+.wx-r .dn{font-weight:500}
+.wx-r .ic{font-size:1.4rem;text-align:center}
+.wx-r .tx{color:var(--muted);font-size:.82rem;line-height:1.25}
+.wx-r .tt{white-space:nowrap}
+.wx-r .tt span{color:var(--muted)}
+.wx-r .sm{color:var(--muted);font-size:.82rem;white-space:nowrap}
+.wx-src{font-size:.72rem;color:var(--muted);text-align:right}
 .nw-b{background:var(--card);border-radius:1rem;padding:1.2rem 1.3rem;width:min(38rem,92vw);max-height:88vh;overflow:auto;display:flex;flex-direction:column;gap:.7rem}
 .nw-b small{color:var(--accent);font-size:.85rem}
 .nw-b h3{font-size:1.4rem;line-height:1.25;font-weight:500}
@@ -183,6 +203,7 @@ body.night .right .spot{flex:1}
 <div class="status" id="status"></div>
 
 <div class="nw-m" id="nwM" hidden><div class="nw-b" id="nwB"></div></div>
+<div class="nw-m" id="wxM" hidden><div class="wx-b" id="wxB"></div></div>
 
 <div class="gate" id="gate" hidden>
   <form id="gateForm" autocomplete="off">
@@ -289,7 +310,63 @@ function api(path, body) {
     });
 }
 
-/* ---------- meteo (Open-Meteo, sem chave) ---------- */
+/* ---------- meteo (IPMA; Open-Meteo como reserva) ---------- */
+var WXD = null;
+var IPMA = {
+  1: ['Céu limpo', '☀️'], 2: ['Pouco nublado', '🌤️'], 3: ['Parcialmente nublado', '⛅'], 4: ['Muito nublado', '☁️'], 5: ['Nuvens altas', '🌥️'],
+  6: ['Aguaceiros', '🌦️'], 7: ['Aguaceiros fracos', '🌦️'], 8: ['Aguaceiros fortes', '🌧️'], 9: ['Chuva', '🌧️'], 10: ['Chuva fraca', '🌦️'],
+  11: ['Chuva forte', '🌧️'], 12: ['Períodos de chuva', '🌧️'], 13: ['Chuva fraca', '🌦️'], 14: ['Chuva forte', '🌧️'], 15: ['Chuvisco', '🌦️'],
+  16: ['Neblina', '🌫️'], 17: ['Nevoeiro', '🌫️'], 18: ['Neve', '❄️'], 19: ['Trovoada', '⛈️'], 20: ['Aguaceiros e trovoada', '⛈️'],
+  21: ['Granizo', '🌨️'], 22: ['Geada', '❄️'], 23: ['Chuva e trovoada', '⛈️'], 24: ['Nebulosidade convectiva', '⛅'], 25: ['Períodos nublados', '⛅'],
+  26: ['Nevoeiro', '🌫️'], 27: ['Nublado', '☁️'], 28: ['Aguaceiros de neve', '❄️'], 29: ['Chuva e neve', '🌨️'], 30: ['Chuva e neve', '🌨️']
+};
+function ipmaW(id, day) {
+  var w = IPMA[id] || ['—', '🌡️'], icon = w[1];
+  if (day === 0 && (id === 1 || id === 2)) icon = '🌙';
+  return { text: w[0], icon: icon };
+}
+function ipmaCurrent(stations) {
+  return fetch('https://api.ipma.pt/open-data/observation/meteorology/stations/observations.json', { cache: 'no-store' })
+    .then(function (r) { if (!r.ok) throw new Error('obs'); return r.json(); })
+    .then(function (ob) {
+      var hours = Object.keys(ob).sort().reverse(), out = {};
+      var F = { t: ['temperatura', -50], h: ['humidade', 0], wk: ['intensidadeVentoKM', 0], p: ['pressao', 800] };
+      Object.keys(F).forEach(function (k) {
+        for (var h = 0; h < hours.length && h < 6 && out[k] == null; h++) for (var i = 0; i < stations.length; i++) {
+          var o = ob[hours[h]][stations[i]], v = o && o[F[k][0]];
+          if (typeof v === 'number' && v > F[k][1]) { out[k] = v; break; }
+        }
+      });
+      return out;
+    }).catch(function () { return {}; });
+}
+function ipmaUv(city) {
+  return fetch('https://api.ipma.pt/open-data/forecast/meteorology/uv/uv.json', { cache: 'no-store' })
+    .then(function (r) { if (!r.ok) throw new Error('uv'); return r.json(); })
+    .then(function (j) { var m = {}; (j.data || j).forEach(function (x) { if (x.globalIdLocal === city) m[x.data] = parseFloat(x.iUv); }); return m; })
+    .catch(function () { return {}; });
+}
+function loadIpma() {
+  var city = C.IPMA_CITY || 1110600, sts = C.IPMA_STATIONS || [6215360, 1210765, 1200535];
+  return Promise.all([
+    fetch('https://api.ipma.pt/open-data/forecast/meteorology/cities/daily/' + city + '.json', { cache: 'no-store' }).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }),
+    ipmaCurrent(sts), ipmaUv(city)
+  ]).then(function (a) {
+    var f = (a[0] && a[0].data) || [];
+    if (!f.length) throw new Error('vazio');
+    var hr = new Date().getHours(), day = (hr >= 7 && hr < 20) ? 1 : 0;
+    var o = a[1] || {}, uv = a[2] || {}, t = o.t != null ? o.t : (parseFloat(f[0].tMax) + parseFloat(f[0].tMin)) / 2;
+    return {
+      current: { temperature_2m: t, ipma: f[0].idWeatherType, is_day: day, hum: o.h, windkm: o.wk, pres: o.p },
+      daily: {
+        time: f.map(function (x) { return x.forecastDate; }), ipma: f.map(function (x) { return x.idWeatherType; }),
+        temperature_2m_max: f.map(function (x) { return parseFloat(x.tMax); }), temperature_2m_min: f.map(function (x) { return parseFloat(x.tMin); }),
+        precipitation_probability_max: f.map(function (x) { return Math.round(parseFloat(x.precipitaProb) || 0); }),
+        wdir: f.map(function (x) { return x.predWindDir; }), wcls: f.map(function (x) { return x.classWindSpeed; }), uv: f.map(function (x) { return uv[x.forecastDate]; })
+      }
+    };
+  });
+}
 var WMO = {
   0: ['Céu limpo', '☀️'], 1: ['Pouco nublado', '🌤️'], 2: ['Parcialmente nublado', '⛅'], 3: ['Nublado', '☁️'],
   45: ['Nevoeiro', '🌫️'], 48: ['Nevoeiro', '🌫️'],
@@ -307,9 +384,10 @@ function wmo(code, day) {
 }
 
 function renderWeather(j) {
+  WXD = j;
   var box = $('wx'); clear(box);
   var cur = j.current, d = j.daily;
-  var w = wmo(cur.weather_code, cur.is_day);
+  var w = cur.ipma != null ? ipmaW(cur.ipma, cur.is_day) : wmo(cur.weather_code, cur.is_day);
   var now = el('div', 'now');
   now.appendChild(el('div', 'ic', w.icon));
   now.appendChild(el('div', 'tp', Math.round(cur.temperature_2m) + '°'));
@@ -324,28 +402,83 @@ function renderWeather(j) {
     var dd = el('div', 'dd');
     var dt = new Date(d.time[i] + 'T12:00:00');
     dd.appendChild(document.createTextNode(cap(fmtWd.format(dt).replace('.', ''))));
-    dd.appendChild(el('b', null, wmo(d.weather_code[i], 1).icon));
+    dd.appendChild(el('b', null, d.ipma ? ipmaW(d.ipma[i], 1).icon : wmo(d.weather_code[i], 1).icon));
     dd.appendChild(document.createTextNode(Math.round(d.temperature_2m_max[i]) + '° / ' + Math.round(d.temperature_2m_min[i]) + '°'));
     nx.appendChild(dd);
   }
   box.appendChild(nx);
 }
 
+var WX_DIR = { N: 'Norte', NE: 'Nordeste', E: 'Este', SE: 'Sudeste', S: 'Sul', SW: 'Sudoeste', W: 'Oeste', NW: 'Noroeste' };
+var WX_WCLS = { 1: 'Fraco', 2: 'Moderado', 3: 'Forte', 4: 'Muito forte' };
+function uvLabel(u) { return u == null || isNaN(u) ? '—' : u < 3 ? 'Baixo' : u < 6 ? 'Moderado' : u < 8 ? 'Alto' : u < 11 ? 'Muito alto' : 'Extremo'; }
+function sunTimes() {
+  var d = new Date(), rad = Math.PI / 180, n = Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 864e5);
+  var g = (2 * Math.PI / 365) * (n - 1), eq = 229.18 * (0.000075 + 0.001868 * Math.cos(g) - 0.032077 * Math.sin(g) - 0.014615 * Math.cos(2 * g) - 0.040849 * Math.sin(2 * g));
+  var dec = 0.006918 - 0.399912 * Math.cos(g) + 0.070257 * Math.sin(g) - 0.006758 * Math.cos(2 * g) + 0.000907 * Math.sin(2 * g) - 0.002697 * Math.cos(3 * g) + 0.00148 * Math.sin(3 * g);
+  var lat = C.LAT * rad, ha = Math.acos(Math.cos(90.833 * rad) / (Math.cos(lat) * Math.cos(dec)) - Math.tan(lat) * Math.tan(dec)) / rad;
+  var off = -d.getTimezoneOffset();
+  function f(m) { m = Math.round(m + off); var h = Math.floor(m / 60) % 24; return (h < 10 ? '0' : '') + h + ':' + ('0' + (m % 60)).slice(-2); }
+  return { up: f(720 - 4 * (C.LON + ha) - eq), down: f(720 - 4 * (C.LON - ha) - eq) };
+}
+var wxTimer = null;
+function closeWx() { $('wxM').hidden = true; if (wxTimer) { clearTimeout(wxTimer); wxTimer = null; } }
+function openWx() {
+  var j = WXD; if (!j) return;
+  var cur = j.current, d = j.daily, box = $('wxB'); clear(box);
+  var w = cur.ipma != null ? ipmaW(cur.ipma, cur.is_day) : wmo(cur.weather_code, cur.is_day);
+  var h = el('div', 'wx-h');
+  h.appendChild(el('div', 'ic', w.icon)); h.appendChild(el('div', 'tp', Math.round(cur.temperature_2m) + '°'));
+  h.appendChild(el('div', 'ds', w.text + ' · ' + (C.PLACE || 'Carcavelos')));
+  var x = el('button', null, 'Fechar'); x.type = 'button'; x.addEventListener('click', closeWx); h.appendChild(x);
+  box.appendChild(h);
+  var sun = sunTimes(), uv0 = d.uv && d.uv[0], wd0 = d.wdir && d.wdir[0];
+  var cells = [
+    ['💧 Humidade', cur.hum != null ? Math.round(cur.hum) + '%' : '—'],
+    ['💨 Vento', cur.windkm != null ? Math.round(cur.windkm) + ' km/h' : (d.wcls ? WX_WCLS[d.wcls[0]] || '—' : '—'), wd0 ? (WX_DIR[wd0] || wd0) : ''],
+    ['🔆 Índice UV', uv0 != null && !isNaN(uv0) ? String(Math.round(uv0 * 10) / 10).replace('.', ',') : '—', uvLabel(uv0)],
+    ['🌧️ Chuva hoje', (d.precipitation_probability_max[0] || 0) + '%'],
+    ['🌅 Nascer do sol', sun.up], ['🌇 Pôr do sol', sun.down]
+  ];
+  var g = el('div', 'wx-g');
+  cells.forEach(function (c) { var e = el('div', null, c[0]); e.appendChild(el('b', null, c[1] + (c[2] ? ' ' : ''))); if (c[2]) e.lastChild.appendChild(el('span', null, c[2])); g.appendChild(e); });
+  box.appendChild(g);
+  var list = el('div', 'wx-d');
+  for (var i = 0; i < d.time.length; i++) {
+    var r = el('div', 'wx-r'), dt = new Date(d.time[i] + 'T12:00:00'), dw = d.ipma ? ipmaW(d.ipma[i], 1) : wmo(d.weather_code[i], 1);
+    r.appendChild(el('div', 'dn', i === 0 ? 'Hoje' : cap(fmtWd.format(dt).replace('.', ''))));
+    r.appendChild(el('div', 'ic', dw.icon));
+    var tx = el('div', 'tx', dw.text); if (d.wdir && d.wdir[i]) { tx.appendChild(el('br')); tx.appendChild(document.createTextNode('💨 ' + (WX_WCLS[d.wcls[i]] || '') + ' · ' + d.wdir[i])); } r.appendChild(tx);
+    var tt = el('div', 'tt', Math.round(d.temperature_2m_max[i]) + '° '); tt.appendChild(el('span', null, '/ ' + Math.round(d.temperature_2m_min[i]) + '°')); r.appendChild(tt);
+    r.appendChild(el('div', 'sm', '🌧️ ' + (d.precipitation_probability_max[i] || 0) + '%'));
+    var u = d.uv && d.uv[i]; r.appendChild(el('div', 'sm', '🔆 ' + (u != null && !isNaN(u) ? Math.round(u) : '—')));
+    list.appendChild(r);
+    if (d.wdir && d.wdir[i]) r.title = 'Vento ' + (WX_WCLS[d.wcls[i]] || '') + ' de ' + (WX_DIR[d.wdir[i]] || d.wdir[i]);
+  }
+  box.appendChild(list);
+  box.appendChild(el('div', 'wx-src', d.ipma ? 'Fonte: IPMA' : 'Fonte: Open-Meteo'));
+  $('wxM').hidden = false;
+  if (wxTimer) clearTimeout(wxTimer); wxTimer = setTimeout(closeWx, 90000);
+}
+$('wx').addEventListener('click', openWx);
+$('wxM').addEventListener('click', function (e) { if (e.target === this) closeWx(); });
 function loadWeather() {
   if (DEMO) {
     renderWeather({
-      current: { temperature_2m: 21.6, weather_code: 2, is_day: 1 },
+      current: { temperature_2m: 21.6, ipma: 3, is_day: 1, hum: 62, windkm: 14, pres: 1018 },
       daily: {
-        time: ['2026-10-16', '2026-10-17', '2026-10-18'], weather_code: [2, 61, 0],
-        temperature_2m_max: [23.4, 20.1, 22.8], temperature_2m_min: [14.9, 15.2, 13.7], precipitation_probability_max: [10, 70, 5]
+        time: ['2026-10-16', '2026-10-17', '2026-10-18'], ipma: [3, 10, 1],
+        temperature_2m_max: [23.4, 20.1, 22.8], temperature_2m_min: [14.9, 15.2, 13.7], precipitation_probability_max: [10, 70, 5],
+        wdir: ['NW', 'W', 'N'], wcls: [2, 3, 1], uv: [4.4, 2.1, 5.0]
       }
     });
     return;
   }
   var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + C.LAT + '&longitude=' + C.LON +
     '&current=temperature_2m,weather_code,is_day&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&forecast_days=3';
-  fetch(url).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-    .then(function (j) { renderWeather(j); setStatus('wx'); })
+  loadIpma().catch(function () {
+    return fetch(url).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
+  }).then(function (j) { renderWeather(j); setStatus('wx'); })
     .catch(function () { setStatus('wx', 'Meteo sem ligação'); setTimeout(loadWeather, 60000); });
 }
 
