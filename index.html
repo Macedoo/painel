@@ -49,6 +49,15 @@ h2{font-size:.72rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase
 .legend i{display:inline-block;width:.5rem;height:.5rem;border-radius:50%;margin-right:.3rem}
 .ph{border:1px dashed var(--line);background:transparent;align-items:center;justify-content:center;text-align:center;color:var(--muted);font-size:.95rem;line-height:1.5}
 .ph b{display:block;font-size:1.1rem;font-weight:500;margin-bottom:.2rem}
+.hm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(10rem,1fr));gap:.6rem;flex:1;min-height:0;overflow:auto;align-content:start}
+.hm-tile{background:var(--card2);border-radius:.75rem;display:flex;flex-direction:column;border:1px solid transparent}
+.hm-tile.on{border-color:var(--accent)}
+.hm-tile.off{opacity:.45}
+.hm-btn{display:flex;flex-direction:column;align-items:flex-start;gap:.15rem;padding:.75rem .8rem;font:inherit;color:inherit;background:none;border:0;text-align:left;min-height:3.8rem;width:100%;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.hm-n{font-size:1.02rem;font-weight:500;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hm-s{font-size:.78rem;color:var(--muted)}
+.hm-tile.on .hm-s{color:var(--accent)}
+.hm-tile input[type=range]{width:calc(100% - 1.2rem);margin:.1rem .6rem .7rem;accent-color:var(--accent)}
 .spot{flex:0 0 36%;padding:.8rem .9rem}
 .spot button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .sp-c{display:flex;flex:1;min-height:0;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.55rem;color:var(--muted);font-size:.9rem}
@@ -214,8 +223,10 @@ $('gateForm').addEventListener('submit', function (e) {
   loadAll();
 });
 
-function api(path) {
-  return fetch(C.WORKER_URL.replace(/\/$/, '') + path, { headers: { 'X-Dash-Key': getKey() }, cache: 'no-store' })
+function api(path, body) {
+  var o = { headers: { 'X-Dash-Key': getKey() }, cache: 'no-store' };
+  if (body) { o.method = 'POST'; o.headers['Content-Type'] = 'application/json'; o.body = JSON.stringify(body); }
+  return fetch(C.WORKER_URL.replace(/\/$/, '') + path, o)
     .then(function (r) {
       if (r.status === 401) { showGate('Chave incorreta. Tenta outra vez.'); throw new Error('401'); }
       if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -763,11 +774,74 @@ function spStart() {
   document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible' && !DEMO && spLoggedIn()) spPoll(); });
 }
 
+/* ---------- Casa (luzes e tomadas) ---------- */
+var home = { devices: null, err: '', drag: 0, built: false, timer: null };
+function homeBuild() {
+  if (home.built) return; home.built = true;
+  var c = $('casa'); c.className = 'card casa';
+  c.innerHTML = '<h2><span>Casa</span><span id="hmMsg"></span></h2><div class="hm-grid" id="hmGrid"></div>';
+}
+function homeRender() {
+  var g = $('hmGrid'); if (!g) return;
+  if (Date.now() - home.drag < 4000) return;
+  clear(g);
+  $('hmMsg').textContent = home.err || '';
+  if (home.devices === null) { g.appendChild(el('div', 'row empty', home.err ? '' : 'A carregar…')); return; }
+  if (!home.devices.length) { g.appendChild(el('div', 'row empty', 'Sem dispositivos configurados.')); return; }
+  home.devices.forEach(function (d) {
+    var t = el('div', 'hm-tile' + (d.on ? ' on' : '') + (d.online === false ? ' off' : ''));
+    var b = el('button', 'hm-btn');
+    b.appendChild(el('span', 'hm-n', d.name));
+    b.appendChild(el('span', 'hm-s', d.online === false ? 'Sem ligação' : d.on ? (d.canBright && d.brightness != null ? 'Ligado · ' + d.brightness + '%' : 'Ligado') : 'Desligado'));
+    b.addEventListener('click', function () { homeToggle(d); });
+    t.appendChild(b);
+    if (d.canBright && d.on && d.online !== false) {
+      var r = document.createElement('input'); r.type = 'range'; r.min = d.bmin; r.max = d.bmax; r.value = d.brightness || d.bmax;
+      r.addEventListener('input', function () { home.drag = Date.now(); });
+      r.addEventListener('change', function () { home.drag = 0; d.brightness = +r.value; homeSend(d, 'brightness', +r.value); homeRender(); });
+      t.appendChild(r);
+    }
+    g.appendChild(t);
+  });
+}
+function homeSend(d, action, value) {
+  if (DEMO) return;
+  api('/home/set', { provider: d.provider, id: d.id, sku: d.sku, action: action, value: value })
+    .then(function () { home.err = ''; clearTimeout(home.timer); home.timer = setTimeout(homeLoad, 4000); })
+    .catch(function (e) { if (String(e.message) === '401') return; home.err = 'Falhou'; homeLoad(); });
+}
+function homeToggle(d) {
+  if (d.online === false) return;
+  d.on = !d.on; homeRender();
+  homeSend(d, 'power', d.on ? 1 : 0);
+}
+function homeLoad() {
+  if (!HAS_WORKER && !DEMO) return;
+  homeBuild();
+  if (DEMO) {
+    if (!home.devices) home.devices = [
+      { provider: 'govee', id: '1', sku: 'x', name: 'Sala', canBright: true, bmin: 1, bmax: 100, on: true, brightness: 70, online: true },
+      { provider: 'govee', id: '2', sku: 'x', name: 'Quarto', canBright: true, bmin: 1, bmax: 100, on: false, brightness: 30, online: true },
+      { provider: 'govee', id: '3', sku: 'x', name: 'Secretária', canBright: false, on: true, online: true },
+      { provider: 'govee', id: '4', sku: 'x', name: 'Varanda', canBright: false, on: false, online: false }];
+    homeRender(); return;
+  }
+  api('/home').then(function (j) {
+    home.devices = j.devices || [];
+    home.err = (j.errors && j.errors.length) ? 'Erro: ' + j.errors[0].slice(0, 60) : '';
+    homeRender();
+  }).catch(function (e) {
+    if (String(e.message) === '401') return;
+    home.err = 'Sem ligação'; homeRender();
+  });
+}
+
 /* ---------- arranque ---------- */
 function loadAll() {
   loadWeather();
   loadAgenda();
   loadNews();
+  homeLoad();
 }
 
 spStart();
@@ -784,6 +858,7 @@ else loadAll();
 setInterval(loadWeather, 15 * 60 * 1000);
 setInterval(loadAgenda, 10 * 60 * 1000);
 setInterval(loadNews, 15 * 60 * 1000);
+setInterval(function () { if (!document.hidden && !isNight(new Date().getHours())) homeLoad(); }, 30 * 1000);
 
 if (!DEMO && 'serviceWorker' in navigator && location.protocol === 'https:') {
   navigator.serviceWorker.register('sw.js').catch(function () {});
