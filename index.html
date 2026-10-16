@@ -54,6 +54,9 @@ h2{font-size:.72rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase
 .hm-sec:first-child{margin-top:0}
 .hm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(10rem,1fr));gap:.6rem;align-content:start}
 .hm-n i{font-style:normal;margin-right:.4rem}
+.hm-cols{display:flex;flex-wrap:wrap;gap:.45rem;padding:.1rem .7rem .75rem}
+.hm-cols button{width:1.7rem;height:1.7rem;border-radius:50%;border:2px solid transparent;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.hm-cols button.sel{border-color:var(--fg)}
 .ev{margin-right:.35rem}
 .nitem small i{font-style:normal;margin-right:.25rem}
 .hm-tile{background:var(--card2);border-radius:.75rem;display:flex;flex-direction:column;border:1px solid transparent}
@@ -883,6 +886,20 @@ function homeGroups(devs) {
   if (rest.length) out.push({ name: out.length ? 'Outros' : 'Dispositivos', icon: '🔌', devs: rest });
   return out;
 }
+var HOME_COLORS = ['#ff3b30', '#ff9500', '#ffd60a', '#34c759', '#00c7be', '#0a84ff', '#bf5af2', '#ff2d92'];
+var HOME_WHITES = [['#ffd9a0', 2700, 'Branco quente'], ['#f2f6ff', 6500, 'Branco frio']];
+function homeColors(d) {
+  var box = el('div', 'hm-cols');
+  function add(bg, title, action, value, key) {
+    var b = el('button'); b.type = 'button'; b.title = title; b.setAttribute('aria-label', title); b.style.background = bg;
+    if (d.pick === key) b.className = 'sel';
+    b.addEventListener('click', function () { d.pick = key; homeSend(d, action, value); homeRender(); });
+    box.appendChild(b);
+  }
+  if (d.canColor) HOME_COLORS.forEach(function (c) { add(c, 'Cor ' + c, 'color', c, c); });
+  if (d.canTemp) HOME_WHITES.forEach(function (w) { var k = d.tmin ? Math.min(d.tmax || 9000, Math.max(d.tmin, w[1])) : w[1]; add(w[0], w[2], 'temp', k, 'w' + w[1]); });
+  return box;
+}
 function homeTile(d) {
   var t = el('div', 'hm-tile' + (d.on ? ' on' : '') + (d.online === false ? ' off' : ''));
   var b = el('button', 'hm-btn');
@@ -899,6 +916,7 @@ function homeTile(d) {
     r.addEventListener('change', function () { home.drag = 0; d.brightness = +r.value; homeSend(d, 'brightness', +r.value); homeRender(); });
     t.appendChild(r);
   }
+  if ((d.canColor || d.canTemp) && d.on && d.online !== false) t.appendChild(homeColors(d));
   return t;
 }
 function homeSend(d, action, value) {
@@ -917,7 +935,7 @@ function homeLoad() {
   homeBuild();
   if (DEMO) {
     if (!home.devices) home.devices = [
-      { provider: 'govee', id: '1', sku: 'x', name: 'Desk Lights', canBright: true, bmin: 1, bmax: 100, on: true, brightness: 70, online: true },
+      { provider: 'govee', id: '1', sku: 'x', name: 'Desk Lights', canColor: true, canTemp: true, tmin: 2000, tmax: 9000, canBright: true, bmin: 1, bmax: 100, on: true, brightness: 70, online: true },
       { provider: 'govee', id: '2', sku: 'x', name: 'Desk Lamp', canBright: true, bmin: 1, bmax: 100, on: false, brightness: 30, online: true },
       { provider: 'tuya', id: '3', sku: 'x', name: 'Ceiling Light', canBright: false, on: true, online: true },
       { provider: 'govee', id: '4', sku: 'x', name: 'Fado', canBright: false, on: false, online: true },
