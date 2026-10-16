@@ -1325,10 +1325,30 @@ function spLibBuild() {
 function spLibTimer() { clearTimeout(SPL.timer); SPL.timer = setTimeout(spLibClose, 180000); }
 function spLibOpen(tab) { if (!spLoggedIn()) return; spLibBuild(); if (tab) SPL.tab = tab; $('spM').hidden = false; spLibShow(); spLibTimer(); }
 function spLibClose() { clearTimeout(SPL.timer); var m = $('spM'); if (m) m.hidden = true; }
+function spRecentShelf() {
+  return Promise.all([
+    spApi('GET', '/me/player/recently-played?limit=50'),
+    spLoad('playlists').catch(function () { return []; })
+  ]).then(function (r) {
+    var items = (r[0] && r[0].items) || [], pls = {}, ctx = [], seen = {};
+    (r[1] || []).forEach(function (p) { pls[p.uri] = p; });
+    items.forEach(function (it) {
+      var c = it.context; if (!c || !c.uri || seen[c.uri] || !/^spotify:(playlist|album|artist):/.test(c.uri)) return;
+      seen[c.uri] = 1; ctx.push({ uri: c.uri, type: c.type, t: it.track || {} });
+    });
+    return Promise.all(ctx.slice(0, 5).map(function (c) {
+      if (c.type === 'playlist' && pls[c.uri]) return pls[c.uri];
+      if (c.type === 'album') { var al = c.t.album || {}; return { kind: 'album', name: al.name || 'Álbum', img: spImg(al.images), uri: c.uri }; }
+      var fb = { kind: c.type, name: c.type === 'artist' ? ((c.t.artists || [])[0] || {}).name || 'Artista' : 'Playlist', img: spImg(c.t.album && c.t.album.images), uri: c.uri };
+      var path = (c.type === 'artist' ? '/artists/' : '/playlists/') + c.uri.split(':')[2] + (c.type === 'playlist' ? '?fields=name,images' : '');
+      return spApi('GET', path).then(function (j) { return j && j.name ? { kind: c.type, name: j.name, img: spImg(j.images) || fb.img, uri: c.uri } : fb; }).catch(function () { return fb; });
+    })).then(function (rec) { return spClean(rec.concat(r[1] || [])); });
+  });
+}
 function spShelfLoad() {
-  if (SPL.shelf !== null && Date.now() - SPL.shelfT < 600000) return;
-  SPL.shelfT = Date.now(); SPL.shelf = [];
-  spLoad('playlists').then(function (l) { SPL.shelf = l; SPL.auth = false; spShelfRender(); }).catch(function (e) { SPL.shelf = null; if (e.message === '403') { SPL.auth = true; spShelfRender(); } });
+  if (SPL.shelf !== null && Date.now() - SPL.shelfT < 180000) return;
+  SPL.shelfT = Date.now(); SPL.shelf = SPL.shelf || [];
+  spRecentShelf().then(function (l) { SPL.shelf = l; SPL.auth = false; spShelfRender(); }).catch(function (e) { SPL.shelfT = Date.now() - 120000; if (e.message === '403') { SPL.auth = true; spShelfRender(); } });
 }
 function spShelfRender() {
   var box = $('spShelf'); if (!box) return;
