@@ -87,6 +87,19 @@ h2{font-size:.72rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase
 .nitem{padding:.45rem 0;border-bottom:1px solid var(--line)}
 .nitem small{display:block;font-size:.72rem;color:var(--accent);margin-bottom:.12rem}
 .nitem div{font-size:.98rem;line-height:1.28;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.nitem{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.nitem:active{background:var(--card2)}
+.nw-m{position:fixed;inset:0;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;z-index:9}
+.nw-m[hidden]{display:none}
+.nw-b{background:var(--card);border-radius:1rem;padding:1.2rem 1.3rem;width:min(38rem,92vw);max-height:88vh;overflow:auto;display:flex;flex-direction:column;gap:.7rem}
+.nw-b small{color:var(--accent);font-size:.85rem}
+.nw-b h3{font-size:1.4rem;line-height:1.25;font-weight:500}
+.nw-b p{font-size:1.05rem;line-height:1.5;color:var(--fg)}
+.nw-b img{width:100%;max-height:14rem;object-fit:cover;border-radius:.6rem;display:block}
+.nw-a{display:flex;gap:.7rem;justify-content:flex-end}
+.nw-a a,.nw-a button{font:inherit;font-size:1.05rem;padding:.65rem 1.1rem;border-radius:.5rem;border:0;text-decoration:none;cursor:pointer}
+.nw-a a{background:var(--accent);color:#0b0e13;font-weight:500}
+.nw-a button{background:var(--card2);color:var(--fg)}
 body.night .news{display:none}
 body.night .right .spot{flex:1}
 .compact .app{grid-template-columns:1.2fr 1fr}
@@ -128,6 +141,8 @@ body.night .right .spot{flex:1}
 </div>
 
 <div class="status" id="status"></div>
+
+<div class="nw-m" id="nwM" hidden><div class="nw-b" id="nwB"></div></div>
 
 <div class="gate" id="gate" hidden>
   <form id="gateForm" autocomplete="off">
@@ -508,6 +523,45 @@ function cleanText(t) {
 }
 function nodeText(node, tag) { var n = node.getElementsByTagName(tag)[0]; return n ? n.textContent : ''; }
 
+function itemLink(it) {
+  var ls = [].slice.call(it.getElementsByTagName('link')), h = '';
+  for (var i = 0; i < ls.length && !h; i++) { var r = ls[i].getAttribute('rel'); if (!r || r === 'alternate') h = (ls[i].getAttribute('href') || ls[i].textContent || '').trim(); }
+  return /^https?:\/\//i.test(h) ? h : '';
+}
+function itemDesc(it) {
+  var t = nodeText(it, 'description') || nodeText(it, 'summary') || nodeText(it, 'content:encoded') || nodeText(it, 'content');
+  t = cleanText(t);
+  return t.length > 600 ? t.slice(0, 600).replace(/\s\S*$/, '') + '…' : t;
+}
+function itemImg(it) {
+  var u = '', n = it.getElementsByTagName('enclosure')[0];
+  if (n && /^image/.test(n.getAttribute('type') || 'image')) u = n.getAttribute('url') || '';
+  if (!u) { n = it.getElementsByTagName('media:content')[0] || it.getElementsByTagName('media:thumbnail')[0]; if (n) u = n.getAttribute('url') || ''; }
+  if (!u) { var m = /<img[^>]+src=["']([^"']+)["']/i.exec(nodeText(it, 'description') + nodeText(it, 'content:encoded')); if (m) u = m[1]; }
+  return /^https:\/\//i.test(u) ? u : '';
+}
+var nwTimer = null;
+function closeNews() { $('nwM').hidden = true; if (nwTimer) { clearTimeout(nwTimer); nwTimer = null; } }
+function openNews(n) {
+  var b = $('nwB');
+  clear(b);
+  b.appendChild(el('small', null, n.src + (n.ts ? ' · ' + ago(n.ts) : '')));
+  b.appendChild(el('h3', null, n.title));
+  if (n.img) { var im = el('img'); im.alt = ''; im.onerror = function () { im.remove(); }; im.src = n.img; b.appendChild(im); }
+  if (n.desc) b.appendChild(el('p', null, n.desc));
+  var act = el('div', 'nw-a');
+  if (n.link) { var a = el('a', null, 'Abrir notícia completa'); a.href = n.link; a.target = '_blank'; a.rel = 'noopener'; act.appendChild(a); }
+  var c = el('button', null, 'Fechar');
+  c.type = 'button';
+  c.addEventListener('click', closeNews);
+  act.appendChild(c);
+  b.appendChild(act);
+  $('nwM').hidden = false;
+  if (nwTimer) clearTimeout(nwTimer);
+  nwTimer = setTimeout(closeNews, 90000);
+}
+$('nwM').addEventListener('click', function (e) { if (e.target === this) closeNews(); });
+
 function parseFeed(name, xml) {
   var doc = new DOMParser().parseFromString(xml, 'text/xml');
   if (doc.getElementsByTagName('parsererror').length) return [];
@@ -515,7 +569,7 @@ function parseFeed(name, xml) {
   if (!items.length) items = [].slice.call(doc.getElementsByTagName('entry'));
   return items.slice(0, 10).map(function (it) {
     var d = nodeText(it, 'pubDate') || nodeText(it, 'published') || nodeText(it, 'updated');
-    return { src: name, title: cleanText(nodeText(it, 'title')), ts: Date.parse(d) || 0 };
+    return { src: name, title: cleanText(nodeText(it, 'title')), ts: Date.parse(d) || 0, link: itemLink(it), desc: itemDesc(it), img: itemImg(it) };
   }).filter(function (x) { return x.title; });
 }
 
@@ -543,6 +597,7 @@ function renderNews() {
     var it = el('div', 'nitem');
     it.appendChild(el('small', null, n.src + (n.ts ? ' · ' + ago(n.ts) : '')));
     it.appendChild(el('div', null, n.title));
+    it.addEventListener('click', function () { openNews(n); });
     box.appendChild(it);
   });
   $('npg').textContent = (npage + 1) + '/' + pages;
@@ -561,7 +616,7 @@ function startNewsRotation() {
 function demoFeeds() {
   function feed(items) {
     return '<rss version="2.0"><channel><title>x</title>' + items.map(function (i) {
-      return '<item><title>' + i[0] + '</title><pubDate>' + new Date(Date.now() - i[1] * 60000).toUTCString() + '</pubDate></item>';
+      return '<item><title>' + i[0] + '</title><link>https://example.com/noticia</link><description>Resumo de exemplo da notícia, com algumas linhas de texto para testar como fica a janela de leitura no tablet.</description><pubDate>' + new Date(Date.now() - i[1] * 60000).toUTCString() + '</pubDate></item>';
     }).join('') + '</channel></rss>';
   }
   return [
@@ -581,7 +636,7 @@ function loadNews() {
     var bySrc = {}, order = [];
     all.forEach(function (n) { if (!bySrc[n.src]) { bySrc[n.src] = []; order.push(n.src); } bySrc[n.src].push(n); });
     var mixed = [], more = true;
-    for (var i = 0; more && mixed.length < 16; i++) {
+    for (var i = 0; more && mixed.length < 24; i++) {
       more = false;
       order.forEach(function (s) { if (bySrc[s][i]) { mixed.push(bySrc[s][i]); more = true; } });
     }
