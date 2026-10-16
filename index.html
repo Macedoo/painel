@@ -250,11 +250,13 @@ body.night .wx .nx{display:none}
 .spot .sp-dev{display:block;width:100%;max-width:100%;font-size:.74rem;color:var(--muted);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:.2rem 0}
 .sp-bar{height:.3rem;background:#ffffff1f;border-radius:1rem;overflow:hidden;flex:none}
 .sp-bar i{display:block;height:100%;width:0;background:var(--accent)}
-.sp-ctl{display:flex;justify-content:space-between;align-items:center;flex:none;padding:0 .3rem}
+.sp-ctl{display:flex;justify-content:center;gap:2.6rem;align-items:center;flex:none;padding:0 .3rem}
 .spot .sp-ctl button{padding:.35rem .8rem;border-radius:.7rem;line-height:0}
 .spot .sp-ctl .big{background:var(--accent);color:#06101a;border-radius:50%;width:3.1rem;height:3.1rem;padding:0;display:flex;align-items:center;justify-content:center}
 .sp-lib{font-size:.74rem;color:var(--muted)}
 .sp-devs{flex:1;min-height:0;display:flex;flex-direction:column}
+.sp-devs h2 span:last-child{display:flex;gap:.4rem}
+.sp-devs h2 button{background:var(--card2);color:var(--fg);padding:.35rem .75rem;border-radius:.7rem;font-size:.78rem;font-weight:500}
 .sp-dl{flex:1;min-height:0;overflow:auto}
 .spot .sp-dv{display:block;width:100%;text-align:left;padding:.6rem .3rem;border-bottom:1px solid var(--line);font-size:.9rem}
 .spot .sp-dv.on{color:var(--accent)}
@@ -1205,14 +1207,14 @@ function spBuild() {
     '<div class="sp-play" id="spPlay" hidden><div class="sp-top"><div class="sp-art" id="spArt">♪</div><div class="sp-meta">' +
       '<div class="sp-t" id="spTitle"></div><div class="sp-a" id="spArtist"></div><button class="sp-dev" id="spDev"></button></div></div>' +
       '<div style="flex:none"><div class="sp-err" id="spErr2"></div><div class="sp-bar"><i id="spBar"></i></div>' +
-      '<div class="sp-ctl" style="margin-top:.7rem"><button id="spPrev" aria-label="Anterior">' + SPI.prev + '</button><button class="big" id="spPP" aria-label="Tocar ou pausar"></button><button id="spNext" aria-label="Seguinte">' + SPI.next + '</button><button class="sp-lib" id="spLib1">📚 Biblioteca</button></div></div>' +
+      '<div class="sp-ctl" style="margin-top:.7rem"><button id="spPrev" aria-label="Anterior">' + SPI.prev + '</button><button class="big" id="spPP" aria-label="Tocar ou pausar"></button><button id="spNext" aria-label="Seguinte">' + SPI.next + '</button></div></div>' +
     '</div>' +
     '<div class="sp-shelf" id="spShelf" hidden></div>' +
-    '<div class="sp-devs" id="spDevs" hidden><h2><span>Tocar em</span><button id="spBack">Voltar</button></h2><div class="sp-dl" id="spDl"></div></div>';
+    '<div class="sp-devs" id="spDevs" hidden><h2><span>Tocar em</span><span><button id="spLibD">🎧 Biblioteca</button> <button id="spBack">Voltar</button></span></h2><div class="sp-dl" id="spDl"></div></div>';
   $('spLoginBtn').addEventListener('click', function () { if (DEMO) return; spLogin(); });
   $('spPick0').addEventListener('click', spShowDevices);
   $('spLib0').addEventListener('click', function () { spLibOpen(); });
-  $('spLib1').addEventListener('click', function () { spLibOpen(); });
+  $('spLibD').addEventListener('click', function () { spLibOpen(); });
   $('spDev').addEventListener('click', spShowDevices);
   $('spArt').addEventListener('click', function () { spLibOpen(); });
   $('spTitle').addEventListener('click', function () { spLibOpen(); });
