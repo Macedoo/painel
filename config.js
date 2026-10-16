@@ -3,6 +3,7 @@
 window.DASH_CONFIG = {
   // Endereço do teu Worker da Cloudflare (ver README, passo 3).
   WORKER_URL: "https://painel-casa.rmacedo-23.workers.dev",
+  SPOTIFY_CLIENT_ID: "9eda80ee2b1049649ca170610e15dd2d",
   // Local para a meteo (latitude e longitude). Ajusta para a tua zona.
   LAT: 38.69,
   LON: -9.34,
