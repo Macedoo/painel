@@ -67,7 +67,38 @@ h2{font-size:.72rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase
 .hm-s{font-size:.78rem;color:var(--muted)}
 .hm-tile.on .hm-s{color:var(--accent)}
 .hm-tile input[type=range]{width:calc(100% - 1.2rem);margin:.1rem .6rem .7rem;accent-color:var(--accent)}
-.spot{flex:0 0 36%;padding:.8rem .9rem}
+.spot{flex:0 0 44%;padding:.8rem .9rem}
+.sp-shelf{display:flex;gap:.5rem;align-items:center;overflow:hidden;padding-top:.55rem;flex:none}
+.sp-shelf[hidden]{display:none}
+.spot .sp-sh{width:2.9rem;height:2.9rem;flex:none;border-radius:.45rem;background:var(--card2);overflow:hidden;padding:0;display:flex;align-items:center;justify-content:center;font-size:1.3rem}
+.spot .sp-sh img{width:100%;height:100%;object-fit:cover;display:block}
+.spot .sp-sh.more{background:var(--accent);color:#0b0e13;font-weight:600}
+.spot .sp-sh.auth{width:auto;padding:0 .8rem;font-size:.85rem;color:var(--fg)}
+.sp-m{position:fixed;inset:0;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;z-index:9}
+.sp-m[hidden]{display:none}
+.sp-lb{background:var(--card);border-radius:1rem;width:min(46rem,94vw);height:min(86vh,40rem);display:flex;flex-direction:column;padding:1rem 1.1rem;gap:.6rem}
+.sp-lb button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.sp-lh{display:flex;justify-content:space-between;align-items:center;font-size:1.15rem;font-weight:500}
+.sp-lh button{background:var(--card2);padding:.4rem .9rem;border-radius:.5rem;font-size:.95rem}
+.sp-tabs,.sp-chips{display:flex;gap:.4rem;overflow-x:auto;flex:none}
+.sp-tabs button,.sp-chips button{white-space:nowrap;padding:.45rem .85rem;border-radius:2rem;background:var(--card2);font-size:.95rem}
+.sp-tabs button.on{background:var(--accent);color:#0b0e13;font-weight:500}
+.sp-chips button{font-size:.82rem;padding:.3rem .7rem;color:var(--muted)}
+.sp-chips button.on{color:var(--fg);outline:1px solid var(--accent)}
+.sp-q{display:flex;gap:.4rem;flex:none}
+.sp-q input{flex:1;font-size:1.05rem;padding:.55rem .7rem;border-radius:.5rem;border:1px solid var(--line);background:var(--bg);color:var(--fg);-webkit-user-select:text;user-select:text}
+.sp-q button{background:var(--accent);color:#0b0e13;padding:.5rem 1rem;border-radius:.5rem;font-weight:500}
+.sp-q[hidden],.sp-chips[hidden]{display:none}
+.sp-ll{flex:1;min-height:0;overflow:auto}
+.sp-lb .sp-ls{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:.6rem 0 .2rem}
+.sp-lb .sp-r{display:flex;width:100%;gap:.75rem;align-items:center;text-align:left;padding:.45rem .3rem;border-bottom:1px solid var(--line)}
+.sp-r .im{width:3rem;height:3rem;flex:none;border-radius:.4rem;background:var(--card2);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+.sp-r .im img{width:100%;height:100%;object-fit:cover;display:block}
+.sp-r .tx{min-width:0;flex:1}
+.sp-r .tn{font-size:1.02rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp-r .ts{font-size:.8rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp-msg{color:var(--muted);padding:1rem .3rem;font-size:.95rem;line-height:1.5}
+.sp-msg button{display:block;margin-top:.7rem;background:var(--accent);color:#0b0e13;padding:.6rem 1.1rem;border-radius:.5rem;font-weight:500}
 .spot button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .sp-c{display:flex;flex:1;min-height:0;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.55rem;color:var(--muted);font-size:.9rem}
 .sp-c b{color:var(--fg);font-weight:500;font-size:1.1rem}
@@ -667,7 +698,7 @@ function loadNews() {
 /* ---------- Spotify (login PKCE, sem servidor) ---------- */
 var SP_ID = C.SPOTIFY_CLIENT_ID || '';
 var SP_ON = !!SP_ID && SP_ID.indexOf('SEU') < 0;
-var SP_SCOPE = 'user-read-playback-state user-modify-playback-state';
+var SP_SCOPE = 'user-read-playback-state user-modify-playback-state playlist-read-private playlist-read-collaborative user-top-read user-read-recently-played user-library-read';
 var sp = { state: null, t: 0, timer: null, view: 'play', devices: null, err: '', devTimer: null };
 function drop(k) { try { localStorage.removeItem(k); } catch (e) {} }
 function b64url(buf) { var s = ''; new Uint8Array(buf).forEach(function (b) { s += String.fromCharCode(b); }); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
@@ -737,16 +768,20 @@ function spBuild() {
   card.className = 'card spot';
   card.innerHTML =
     '<div class="sp-c" id="spLogin"><b>Spotify</b><span>Liga a tua conta para ver o que está a tocar</span><button class="sp-btn" id="spLoginBtn">Ligar ao Spotify</button><span class="sp-err" id="spErr0"></span></div>' +
-    '<div class="sp-c" id="spIdle" hidden><b>Nada a tocar</b><button class="sp-btn" id="spPick0">Escolher onde tocar</button><span class="sp-err" id="spErr1"></span></div>' +
+    '<div class="sp-c" id="spIdle" hidden><b>Nada a tocar</b><button class="sp-btn" id="spPick0">Escolher onde tocar</button><button class="sp-btn" id="spLib0">🎧 Biblioteca</button><span class="sp-err" id="spErr1"></span></div>' +
     '<div class="sp-play" id="spPlay" hidden><div class="sp-art" id="spArt">♪</div><div class="sp-meta">' +
       '<div><div class="sp-t" id="spTitle"></div><div class="sp-a" id="spArtist"></div></div>' +
       '<div><div class="sp-bar"><i id="spBar"></i></div><button class="sp-dev" id="spDev"></button><div class="sp-err" id="spErr2"></div></div>' +
       '<div class="sp-ctl"><button id="spPrev" aria-label="Anterior">' + SPI.prev + '</button><button class="big" id="spPP" aria-label="Tocar ou pausar"></button><button id="spNext" aria-label="Seguinte">' + SPI.next + '</button></div>' +
     '</div></div>' +
+    '<div class="sp-shelf" id="spShelf" hidden></div>' +
     '<div class="sp-devs" id="spDevs" hidden><h2><span>Tocar em</span><button id="spBack">Voltar</button></h2><div class="sp-dl" id="spDl"></div></div>';
   $('spLoginBtn').addEventListener('click', function () { if (DEMO) return; spLogin(); });
   $('spPick0').addEventListener('click', spShowDevices);
+  $('spLib0').addEventListener('click', function () { spLibOpen(); });
   $('spDev').addEventListener('click', spShowDevices);
+  $('spArt').addEventListener('click', function () { spLibOpen(); });
+  $('spTitle').addEventListener('click', function () { spLibOpen(); });
   $('spBack').addEventListener('click', function () { sp.view = 'play'; clearTimeout(sp.devTimer); spRender(); });
   $('spPrev').addEventListener('click', function () { spCmd('POST', '/me/player/previous'); });
   $('spNext').addEventListener('click', function () { spCmd('POST', '/me/player/next'); });
@@ -755,6 +790,124 @@ function spBuild() {
     if (st) { st.is_playing = !playing; sp.t = Date.now(); spRender(); }
     spCmd('PUT', playing ? '/me/player/pause' : '/me/player/play');
   });
+}
+/* ---- biblioteca (playlists, mais ouvidas, pesquisa) ---- */
+var SPL = { tab: 'playlists', tr: 'medium_term', q: '', cache: {}, shelf: null, idle: null, pending: null, built: false };
+var SP_TABS = [['playlists', '📚 Playlists'], ['tracks', '🔥 Mais ouvidas'], ['artists', '🎤 Artistas'], ['recent', '🕘 Recentes'], ['saved', '💚 Guardadas'], ['search', '🔍 Pesquisar']];
+var SP_RANGES = [['short_term', 'Últimas 4 semanas'], ['medium_term', 'Últimos 6 meses'], ['long_term', 'Desde sempre']];
+function spImg(images) { var a = images || [], u = a.length ? a[Math.min(1, a.length - 1)].url : ''; return /^https:\/\//.test(u) ? u : ''; }
+function spTrack(t) { return t && t.uri && t.name ? { kind: 'track', name: t.name, sub: (t.artists || []).map(function (a) { return a.name; }).join(', '), img: spImg(t.album && t.album.images), uri: t.uri } : null; }
+function spPl(p) { if (!p || !p.uri) return null; var n = (p.items || p.tracks || {}).total; return { kind: 'playlist', name: p.name || 'Playlist', sub: n != null ? n + ' faixas' : 'Playlist', img: spImg(p.images), uri: p.uri }; }
+function spAl(a) { return a && a.uri ? { kind: 'album', name: a.name, sub: 'Álbum · ' + (a.artists || []).map(function (x) { return x.name; }).join(', '), img: spImg(a.images), uri: a.uri } : null; }
+function spAr(a) { return a && a.uri ? { kind: 'artist', name: a.name, sub: 'Artista', img: spImg(a.images), uri: a.uri } : null; }
+function spClean(l) { var seen = {}; return l.filter(function (x) { if (!x || seen[x.uri]) return false; seen[x.uri] = 1; return true; }); }
+function spDemoList(tab) {
+  var n = { playlists: ['Daily Mix 1', 'Favoritas', 'Treino', 'Focus', 'Fado clássico'], tracks: ['Música A', 'Música B', 'Música C', 'Música D'], artists: ['Artista X', 'Artista Y', 'Artista Z'], recent: ['Recente 1', 'Recente 2', 'Recente 3'], saved: ['Guardada 1', 'Guardada 2'], search: ['Resultado 1', 'Resultado 2'] }[tab] || [];
+  return n.map(function (x, i) { return { kind: tab === 'playlists' ? 'playlist' : tab === 'artists' ? 'artist' : 'track', name: x, sub: 'Exemplo', img: '', uri: 'spotify:x:' + tab + i }; });
+}
+function spLoad(tab) {
+  if (DEMO) return Promise.resolve(spDemoList(tab));
+  var tr = SPL.tr;
+  if (tab === 'playlists') return spApi('GET', '/me/playlists?limit=30').then(function (j) { return spClean(((j && j.items) || []).map(spPl)); });
+  if (tab === 'tracks') return spApi('GET', '/me/top/tracks?limit=30&time_range=' + tr).then(function (j) { return spClean(((j && j.items) || []).map(spTrack)); });
+  if (tab === 'artists') return spApi('GET', '/me/top/artists?limit=30&time_range=' + tr).then(function (j) { return spClean(((j && j.items) || []).map(spAr)); });
+  if (tab === 'recent') return spApi('GET', '/me/player/recently-played?limit=40').then(function (j) { return spClean(((j && j.items) || []).map(function (i) { return spTrack(i.track); })); });
+  if (tab === 'saved') return spApi('GET', '/me/tracks?limit=40').then(function (j) { return spClean(((j && j.items) || []).map(function (i) { return spTrack(i.track); })); });
+  if (tab === 'search') {
+    if (!SPL.q) return Promise.resolve([]);
+    return spApi('GET', '/search?type=track,artist,album,playlist&limit=10&q=' + encodeURIComponent(SPL.q)).then(function (j) {
+      j = j || {};
+      var g = function (k, f) { return spClean((((j[k] || {}).items) || []).map(f)); };
+      return g('tracks', spTrack).concat(g('artists', spAr), g('albums', spAl), g('playlists', spPl));
+    });
+  }
+  return Promise.resolve([]);
+}
+function spPlay(body) {
+  if (DEMO) { spLibClose(); return; }
+  spApi('PUT', '/me/player/play', body).then(function () { spLibClose(); setTimeout(spPoll, 900); }).catch(function (e) {
+    if (e.reason === 'NO_ACTIVE_DEVICE' || e.message === '404') { SPL.pending = body; spLibClose(); spShowDevices(); return; }
+    spLibMsg(e.reason === 'PREMIUM_REQUIRED' ? 'Precisa de Spotify Premium para tocar.' : 'Não deu para tocar. Tenta outra vez.');
+  });
+}
+function spPlayItem(list, i) {
+  var it = list[i];
+  if (it.kind === 'track') {
+    var tr = list.filter(function (x) { return x.kind === 'track'; }), pos = tr.indexOf(it);
+    var from = Math.max(0, pos - 0), uris = tr.slice(from, from + 50).map(function (x) { return x.uri; });
+    spPlay({ uris: uris });
+  } else spPlay({ context_uri: it.uri });
+}
+function spRow(list, i) {
+  var it = list[i], b = el('button', 'sp-r'); b.type = 'button';
+  var im = el('span', 'im');
+  if (it.img) { var g = document.createElement('img'); g.alt = ''; g.loading = 'lazy'; g.src = it.img; im.appendChild(g); } else im.textContent = it.kind === 'artist' ? '🎤' : it.kind === 'track' ? '🎵' : '📚';
+  var tx = el('span', 'tx'); tx.appendChild(el('div', 'tn', it.name)); tx.appendChild(el('div', 'ts', it.sub));
+  b.appendChild(im); b.appendChild(tx);
+  b.addEventListener('click', function () { spPlayItem(list, i); });
+  return b;
+}
+function spLibMsg(t, auth) {
+  var box = $('spLl'); clear(box);
+  var m = el('div', 'sp-msg', t);
+  if (auth) { var b = el('button', null, 'Autorizar no Spotify'); b.type = 'button'; b.addEventListener('click', function () { spLogin(); }); m.appendChild(b); }
+  box.appendChild(m);
+}
+function spLibFail(e) {
+  if (e.message === '403') spLibMsg('Falta autorizar novas permissões (playlists e mais ouvidas). Vais ao Spotify, aceitas, e voltas ao painel.', true);
+  else if (e.message === 'login') spLibMsg('Liga primeiro a tua conta Spotify.');
+  else spLibMsg('Não consegui carregar. Tenta outra vez daqui a pouco.');
+}
+function spLibShow() {
+  var tab = SPL.tab, box = $('spLl');
+  $('spQ').hidden = tab !== 'search'; $('spChips').hidden = !(tab === 'tracks' || tab === 'artists');
+  [].forEach.call($('spTabs').children, function (b) { b.className = b.getAttribute('data-t') === tab ? 'on' : ''; });
+  [].forEach.call($('spChips').children, function (b) { b.className = b.getAttribute('data-r') === SPL.tr ? 'on' : ''; });
+  if (tab === 'search' && !SPL.q) { spLibMsg('Escreve uma música, artista, álbum ou playlist.'); return; }
+  var key = tab + '|' + (tab === 'tracks' || tab === 'artists' ? SPL.tr : '') + '|' + (tab === 'search' ? SPL.q : ''), c = SPL.cache[key];
+  var draw = function (list) {
+    if (SPL.tab !== tab) return;
+    clear(box);
+    if (!list.length) { spLibMsg('Nada para mostrar aqui.'); return; }
+    list.forEach(function (x, i) { box.appendChild(spRow(list, i)); });
+  };
+  if (c && Date.now() - c.t < 300000) { draw(c.l); return; }
+  spLibMsg('A carregar…');
+  spLoad(tab).then(function (l) { SPL.cache[key] = { t: Date.now(), l: l }; draw(l); }).catch(function (e) { if (SPL.tab === tab) spLibFail(e); });
+}
+function spLibBuild() {
+  if (SPL.built) return; SPL.built = true;
+  var m = el('div', 'sp-m'); m.id = 'spM'; m.hidden = true;
+  m.innerHTML = '<div class="sp-lb"><div class="sp-lh"><span>🎧 Spotify</span><button type="button" id="spLx">Fechar</button></div><div class="sp-tabs" id="spTabs"></div><div class="sp-chips" id="spChips" hidden></div><form class="sp-q" id="spQ" hidden><input id="spQi" type="search" placeholder="Pesquisar…" autocomplete="off" autocapitalize="off" spellcheck="false"><button type="submit">Procurar</button></form><div class="sp-ll" id="spLl"></div></div>';
+  document.body.appendChild(m);
+  SP_TABS.forEach(function (t) { var b = el('button', null, t[1]); b.type = 'button'; b.setAttribute('data-t', t[0]); b.addEventListener('click', function () { SPL.tab = t[0]; spLibShow(); spLibTimer(); }); $('spTabs').appendChild(b); });
+  SP_RANGES.forEach(function (r) { var b = el('button', null, r[1]); b.type = 'button'; b.setAttribute('data-r', r[0]); b.addEventListener('click', function () { SPL.tr = r[0]; spLibShow(); spLibTimer(); }); $('spChips').appendChild(b); });
+  $('spQ').addEventListener('submit', function (e) { e.preventDefault(); SPL.q = $('spQi').value.trim(); document.activeElement && document.activeElement.blur(); spLibShow(); spLibTimer(); });
+  $('spLx').addEventListener('click', spLibClose);
+  m.addEventListener('click', function (e) { if (e.target === m) spLibClose(); });
+}
+function spLibTimer() { clearTimeout(SPL.timer); SPL.timer = setTimeout(spLibClose, 180000); }
+function spLibOpen(tab) { if (!spLoggedIn()) return; spLibBuild(); if (tab) SPL.tab = tab; $('spM').hidden = false; spLibShow(); spLibTimer(); }
+function spLibClose() { clearTimeout(SPL.timer); var m = $('spM'); if (m) m.hidden = true; }
+function spShelfLoad() {
+  if (SPL.shelf !== null && Date.now() - SPL.shelfT < 600000) return;
+  SPL.shelfT = Date.now(); SPL.shelf = [];
+  spLoad('playlists').then(function (l) { SPL.shelf = l; SPL.auth = false; spShelfRender(); }).catch(function (e) { SPL.shelf = null; if (e.message === '403') { SPL.auth = true; spShelfRender(); } });
+}
+function spShelfRender() {
+  var box = $('spShelf'); if (!box) return;
+  var show = spLoggedIn() && sp.view !== 'devs' && (SPL.auth || (SPL.shelf && SPL.shelf.length) || DEMO);
+  box.hidden = !show; if (!show) return;
+  var sig = SPL.auth ? 'auth' : (SPL.shelf || []).map(function (x) { return x.uri; }).join(',');
+  if (box.getAttribute('data-s') === sig) return; box.setAttribute('data-s', sig); clear(box);
+  if (SPL.auth) { var a = el('button', 'sp-sh auth', '🔓 Autorizar playlists e mais ouvidas'); a.type = 'button'; a.addEventListener('click', spLogin); box.appendChild(a); return; }
+  (SPL.shelf || []).slice(0, 5).forEach(function (p, i, arr) {
+    var b = el('button', 'sp-sh'); b.type = 'button'; b.title = p.name; b.setAttribute('aria-label', p.name);
+    if (p.img) { var g = document.createElement('img'); g.alt = ''; g.src = p.img; b.appendChild(g); } else b.textContent = '🎵';
+    b.addEventListener('click', function () { spPlay({ context_uri: p.uri }); });
+    box.appendChild(b);
+  });
+  var m = el('button', 'sp-sh more', '＋'); m.type = 'button'; m.title = 'Biblioteca'; m.setAttribute('aria-label', 'Abrir biblioteca'); m.addEventListener('click', function () { spLibOpen(); }); box.appendChild(m);
 }
 function spCmd(method, path) {
   if (DEMO) return;
@@ -774,6 +927,7 @@ function spShowDevices() {
 function spTransfer(id) {
   sp.view = 'play'; clearTimeout(sp.devTimer); spRender();
   if (DEMO) return;
+  if (SPL.pending) { var pb = SPL.pending; SPL.pending = null; spApi('PUT', '/me/player/play?device_id=' + encodeURIComponent(id), pb).then(function () { setTimeout(spPoll, 1200); }).catch(function () { sp.err = 'Não deu para tocar nesse dispositivo'; spRender(); }); return; }
   spApi('PUT', '/me/player', { device_ids: [id], play: true }).then(function () { setTimeout(spPoll, 1200); })
     .catch(function () { sp.err = 'Não deu para mudar de dispositivo'; spRender(); });
 }
@@ -799,6 +953,8 @@ function spRender() {
   var li = spLoggedIn(), st = sp.state, it = st && st.item;
   var view = !li ? 'login' : sp.view === 'devs' ? 'devs' : it ? 'play' : 'idle';
   spShow('spLogin', view === 'login'); spShow('spIdle', view === 'idle'); spShow('spPlay', view === 'play'); spShow('spDevs', view === 'devs');
+  if (li) { if (DEMO && SPL.shelf === null) { SPL.shelf = spDemoList('playlists'); SPL.shelfT = Date.now(); } else if (!DEMO) spShelfLoad(); }
+  spShelfRender();
   ['spErr0', 'spErr1', 'spErr2'].forEach(function (i) { $(i).textContent = sp.err || ''; });
   if (view === 'devs') {
     var dl = $('spDl'); clear(dl);
