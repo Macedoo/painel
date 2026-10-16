@@ -241,13 +241,13 @@ body.night .wx .nx{display:none}
 .sp-c b{color:var(--fg);font-weight:600;font-size:1.1rem}
 .spot .sp-btn{background:var(--accent);color:#06101a;padding:.65rem 1.2rem;border-radius:.8rem;font-weight:600;font-size:.95rem}
 .sp-play{display:flex;flex-direction:column;gap:.7rem;flex:1;min-height:0}
-.sp-top{display:flex;gap:.9rem;align-items:center;flex:none}
-.sp-art{width:6.2rem;height:6.2rem;flex:none;border-radius:1rem;background:var(--card2);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:2.2rem;color:var(--muted)}
+.sp-top{display:flex;flex-direction:column;gap:.8rem;align-items:center;text-align:center;flex:1;min-height:0}
+.sp-art{flex:1 1 0;min-height:0;aspect-ratio:1/1;max-width:100%;border-radius:1.1rem;box-shadow:0 .6rem 1.6rem #0008;background:var(--card2);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:2.2rem;color:var(--muted)}
 .sp-art img{width:100%;height:100%;object-fit:cover;display:block}
-.sp-meta{flex:1;min-width:0}
-.sp-t{font-size:1.05rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp-meta{flex:none;width:100%;min-width:0}
+.sp-t{font-size:1.15rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sp-a{font-size:.8rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:.1rem}
-.spot .sp-dev{display:block;max-width:100%;font-size:.74rem;color:var(--muted);text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:.2rem 0}
+.spot .sp-dev{display:block;width:100%;max-width:100%;font-size:.74rem;color:var(--muted);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:.2rem 0}
 .sp-bar{height:.3rem;background:#ffffff1f;border-radius:1rem;overflow:hidden;flex:none}
 .sp-bar i{display:block;height:100%;width:0;background:var(--accent)}
 .sp-ctl{display:flex;justify-content:space-between;align-items:center;flex:none;padding:0 .3rem}
@@ -732,7 +732,7 @@ function buildEvents(srcList) {
 }
 
 var EV_ICONS = [[/daily|stand-?up|reuni|meeting|pds|sprint|workshop|apresenta/i, '💼'], [/trabalho|turno|work/i, '🛍️'], [/sporting|benfica|porto|jogo|futebol|vs\.? /i, '⚽'], [/gin[aá]sio|treino|gym|corrida/i, '🏋️'], [/consulta|m[eé]dic|dentista|cl[ií]nica|exame/i, '🩺'], [/anivers/i, '🎂'], [/jantar|almo[cç]o|restaurante|caf[eé]/i, '🍽️'], [/voo|flight|aeroporto|viagem/i, '✈️'], [/feriado|f[eé]rias/i, '🏖️'], [/cinema|filme/i, '🎬'], [/concerto|festival|m[uú]sica/i, '🎵']];
-function evIcon(t) { for (var i = 0; i < EV_ICONS.length; i++) if (EV_ICONS[i][0].test(t)) return EV_ICONS[i][1]; return ''; }
+function evIcon(t) { if (/^\s*[\u2600-\u27BF\uD83C-\uDBFF]/.test(t)) return ''; for (var i = 0; i < EV_ICONS.length; i++) if (EV_ICONS[i][0].test(t)) return t.indexOf(EV_ICONS[i][1]) >= 0 ? '' : EV_ICONS[i][1]; return ''; }
 function dayLabel(i, d) {
   if (i === 0) return 'Hoje · ' + fmtDay.format(d).replace(/\./g, '');
   if (i === 1) return 'Amanhã · ' + fmtDay.format(d).replace(/\./g, '');
@@ -1204,7 +1204,7 @@ function spBuild() {
     '<div class="sp-c" id="spIdle" hidden><b>Nada a tocar</b><button class="sp-btn" id="spPick0">Escolher onde tocar</button><button class="sp-btn" id="spLib0">🎧 Biblioteca</button><span class="sp-err" id="spErr1"></span></div>' +
     '<div class="sp-play" id="spPlay" hidden><div class="sp-top"><div class="sp-art" id="spArt">♪</div><div class="sp-meta">' +
       '<div class="sp-t" id="spTitle"></div><div class="sp-a" id="spArtist"></div><button class="sp-dev" id="spDev"></button></div></div>' +
-      '<div style="margin-top:auto"><div class="sp-err" id="spErr2"></div><div class="sp-bar"><i id="spBar"></i></div>' +
+      '<div style="flex:none"><div class="sp-err" id="spErr2"></div><div class="sp-bar"><i id="spBar"></i></div>' +
       '<div class="sp-ctl" style="margin-top:.7rem"><button id="spPrev" aria-label="Anterior">' + SPI.prev + '</button><button class="big" id="spPP" aria-label="Tocar ou pausar"></button><button id="spNext" aria-label="Seguinte">' + SPI.next + '</button><button class="sp-lib" id="spLib1">📚 Biblioteca</button></div></div>' +
     '</div>' +
     '<div class="sp-shelf" id="spShelf" hidden></div>' +
