@@ -564,6 +564,11 @@ function loadWeather() {
 /* ---------- agenda ---------- */
 var events = [];
 var sources = [];
+var CAL_STYLE = {
+  'Apple Catarina': { name: "Catarina's Work", color: '#a855f7' },
+  'Sporting': { color: '#34c759' },
+  'Outlook Xpand': { color: '#f5c542' }
+};
 var agendaState = 'idle'; // idle | ok | off
 
 function loadIcal() {
@@ -754,7 +759,11 @@ function loadAgenda() {
   if (!HAS_WORKER && !DEMO) { renderAgenda(); return; }
   var get = DEMO ? Promise.resolve({ sources: demoSources() }) : api('/calendar');
   Promise.all([get, loadIcal()]).then(function (res) {
-    sources = res[0].sources || [];
+    sources = (res[0].sources || []).map(function (x) {
+      var st = (C.CAL_STYLE || CAL_STYLE)[x.name];
+      if (st) { x.name = st.name || x.name; x.color = st.color || x.color; }
+      return x;
+    });
     var b = buildEvents(sources);
     events = b.events;
     agendaState = 'ok';
