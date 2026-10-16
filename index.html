@@ -125,6 +125,60 @@ body.night .wx .nx{display:none}
 .nitem small{display:block;font-size:.66rem;font-weight:600;color:var(--accent);margin-bottom:.12rem}
 .nitem small i{font-style:normal;margin-right:.25rem}
 .nitem div{font-size:.8rem;line-height:1.3;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+/* futebol */
+.cm{min-width:0}
+.cm .agenda{flex:1 1 0}
+.fut{flex:none;padding:.8rem .9rem;gap:.15rem;cursor:pointer}
+.fut h2{margin-bottom:.35rem}
+.fb-lv{display:inline-flex;align-items:center;gap:.35rem;background:#ff5c7a22;color:var(--red);font-size:.66rem;font-weight:700;padding:.16rem .55rem;border-radius:2rem}
+.fb-lv i{width:.42rem;height:.42rem;border-radius:50%;background:var(--red);display:block;animation:fbp 1.6s infinite}
+@keyframes fbp{50%{opacity:.3}}
+.fb-r{display:grid;grid-template-columns:2.7rem minmax(0,1fr) auto minmax(0,1fr) 1.5rem;align-items:center;gap:.45rem;padding:.36rem .4rem;border-radius:.75rem;font-size:.8rem}
+.fb-r.live{background:#ff5c7a14;box-shadow:inset .16rem 0 0 var(--red)}
+.fb-r.fav:not(.live){background:#f5c54210}
+.fb-r.tap{cursor:pointer}
+.fb-t{font-size:.7rem;color:var(--muted);text-align:center;font-weight:600;display:flex;flex-direction:column;line-height:1.1}
+.fb-t small{font-size:.58rem;font-weight:500}
+.fb-r.live .fb-t{color:var(--red)}
+.fb-h{display:flex;justify-content:flex-end;align-items:center;gap:.4rem;font-weight:600;min-width:0}
+.fb-a{display:flex;align-items:center;gap:.4rem;font-weight:600;min-width:0}
+.fb-n{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.fb-cr{width:1.35rem;height:1.35rem;object-fit:contain;flex:none}
+.fb-s{font-weight:700;font-size:.92rem;min-width:2.9rem;text-align:center;white-space:nowrap}
+.fb-s.u{font-weight:600;color:var(--muted);font-size:.74rem}
+.fb-st{color:#ffffff33;font-size:1rem;text-align:center;line-height:1;padding:0}
+.fb-st.on{color:#f5c542}
+.fb-empty{color:var(--muted);font-size:.8rem;padding:.5rem .3rem;line-height:1.4}
+.fb-more{font-size:.68rem;color:var(--muted);text-align:center;padding-top:.25rem}
+body.night .fut{display:none}
+.fb-b{width:min(46rem,94vw);height:min(92vh,44rem);gap:.6rem}
+.fb-dn{display:flex;align-items:center;gap:.4rem;margin-left:auto}
+.fb-dn button{background:var(--card2);padding:.35rem .8rem;border-radius:.7rem;font-size:.85rem}
+.fb-dn b{font-size:.85rem;min-width:6.5rem;text-align:center;font-weight:600;cursor:pointer}
+.fb-tabs,.fb-chips{display:flex;gap:.4rem;flex:none;overflow-x:auto;scrollbar-width:none}
+.fb-tabs::-webkit-scrollbar,.fb-chips::-webkit-scrollbar{display:none}
+.fb-tabs button,.fb-chips button{white-space:nowrap;display:flex;align-items:center;gap:.4rem;padding:.42rem .85rem;border-radius:2rem;background:var(--card2);font-size:.78rem;font-weight:500;flex:none}
+.fb-chips button{font-size:.72rem;padding:.34rem .7rem}
+.fb-tabs button.on,.fb-chips button.on{background:var(--accent);color:#06101a;font-weight:600}
+.fb-chips em{font-style:normal;background:var(--red);color:#fff;border-radius:1rem;font-size:.6rem;padding:.04rem .38rem;font-weight:700}
+.fb-ci{width:1.15rem;height:1.15rem;object-fit:contain;flex:none}
+.fb-ci.em{font-size:.9rem;line-height:1.15rem;text-align:center}
+.fb-body{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.fb-g{display:flex;align-items:center;gap:.5rem;font-size:.74rem;color:var(--muted);font-weight:600;margin:.7rem .3rem .2rem}
+.fb-body .fb-r{padding:.5rem .45rem}
+.fb-det{background:var(--card2);border-radius:.9rem;margin:.1rem .25rem .4rem;padding:.65rem .85rem;display:grid;grid-template-columns:1fr 1fr;gap:.3rem 1.2rem;font-size:.76rem}
+.fb-ev{display:flex;gap:.5rem;align-items:center}.fb-ev b{color:var(--muted);font-weight:600;min-width:2rem}
+.fb-ev.r{grid-column:2;justify-content:flex-end;text-align:right}.fb-ev.r b{order:2;text-align:left}
+.fb-ev.none{grid-column:1/-1;color:var(--muted)}
+.fb-ft{grid-column:1/-1;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;border-top:1px solid #ffffff14;padding-top:.5rem;margin-top:.15rem;color:var(--muted);font-size:.7rem}
+.fb-ft span{margin-right:auto}
+.fb-ft button{background:var(--bg);padding:.35rem .7rem;border-radius:.7rem;font-size:.72rem;color:var(--fg)}.fb-ft button.on{color:#f5c542}
+.fb-tr{display:grid;grid-template-columns:1.8rem minmax(0,1fr) 2rem 2rem 2rem 2rem 2.4rem 2.4rem;align-items:center;gap:.25rem;padding:.38rem .45rem;font-size:.8rem;border-radius:.7rem;text-align:center}
+.fb-tr.hd{color:var(--muted);font-size:.68rem;font-weight:600}
+.fb-tr .tm{display:flex;align-items:center;gap:.5rem;text-align:left;font-weight:600;min-width:0}
+.fb-tr .tm span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fb-tr .rk{color:var(--muted);font-weight:600}.fb-tr .pt{font-weight:700}
+.fb-tr.fav{background:#f5c54212}
 /* modais */
 .nw-m,.sp-m{position:fixed;inset:0;background:rgba(2,7,10,.8);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:9}
 .nw-m[hidden],.sp-m[hidden]{display:none}
@@ -253,7 +307,15 @@ body.night .wx .nx{display:none}
 .sp-ctl{display:flex;justify-content:center;gap:2.6rem;align-items:center;flex:none;padding:0 .3rem}
 .spot .sp-ctl button{padding:.35rem .8rem;border-radius:.7rem;line-height:0}
 .spot .sp-ctl .big{background:var(--accent);color:#06101a;border-radius:50%;width:3.1rem;height:3.1rem;padding:0;display:flex;align-items:center;justify-content:center}
-.sp-lib{font-size:.74rem;color:var(--muted)}
+.sp-vol{display:flex;align-items:center;gap:.6rem;margin-top:.5rem;color:var(--muted)}
+.sp-vol[hidden]{display:none}
+.sp-vol span{display:flex;flex:none}
+.sp-vol input{--p:50%;flex:1;min-width:0;-webkit-appearance:none;appearance:none;height:1.8rem;background:transparent;margin:0;outline:none;touch-action:none}
+.sp-vol input::-webkit-slider-runnable-track{height:.3rem;border-radius:1rem;background:linear-gradient(to right,var(--accent) var(--p),#ffffff1f var(--p))}
+.sp-vol input::-webkit-slider-thumb{-webkit-appearance:none;width:1.15rem;height:1.15rem;border-radius:50%;background:#fff;margin-top:-.42rem;box-shadow:0 .1rem .4rem #0008}
+.sp-vol input::-moz-range-track{height:.3rem;border-radius:1rem;background:#ffffff1f}
+.sp-vol input::-moz-range-progress{height:.3rem;border-radius:1rem;background:var(--accent)}
+.sp-vol input::-moz-range-thumb{width:1.15rem;height:1.15rem;border:0;border-radius:50%;background:#fff}
 .sp-devs{flex:1;min-height:0;display:flex;flex-direction:column}
 .sp-devs h2 span:last-child{display:flex;gap:.4rem}
 .sp-devs h2 button{background:var(--card2);color:var(--fg);padding:.35rem .75rem;border-radius:.7rem;font-size:.78rem;font-weight:500}
@@ -285,11 +347,14 @@ body.night .c3 .casa{flex:1}
     <section class="card ph spot" id="spot"><div><b>Spotify</b>por ligar (fase 2)</div></section>
   </div>
 
-  <section class="card agenda" id="agenda">
-    <div class="ag-h" id="agHead"></div>
-    <div id="agBody" style="display:flex;flex-direction:column;flex:1;min-height:0"></div>
-    <div class="legend" id="agLegend"></div>
-  </section>
+  <div class="col cm">
+    <section class="card agenda" id="agenda">
+      <div class="ag-h" id="agHead"></div>
+      <div id="agBody" style="display:flex;flex-direction:column;flex:1;min-height:0"></div>
+      <div class="legend" id="agLegend"></div>
+    </section>
+    <section class="card fut" id="fut"></section>
+  </div>
 
   <div class="col c3">
     <section class="card ph casa" id="casa"><div><b>Casa</b>Luzes e tomadas<br>por ligar (fase 4)</div></section>
@@ -308,6 +373,7 @@ body.night .c3 .casa{flex:1}
 <div class="nw-m" id="ltM" hidden><div class="md lt-b" id="ltB"></div></div>
 <div class="nw-m" id="clM" hidden><div class="md cl-b" id="clB"></div></div>
 <div class="nw-m" id="wxM" hidden><div class="md wx-b" id="wxB"></div></div>
+<div class="nw-m" id="fbM" hidden><div class="md fb-b" id="fbB"></div></div>
 
 <div class="gate" id="gate" hidden>
   <form id="gateForm" autocomplete="off">
@@ -1196,7 +1262,9 @@ var SPI = {
   prev: '<svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M6 6h2v12H6zM9.5 12L18 6v12z"/></svg>',
   next: '<svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M16 6h2v12h-2zM6 18V6l8.5 6z"/></svg>',
   play: '<svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>',
-  pause: '<svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>'
+  pause: '<svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>',
+  vlo: '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M5 9v6h4l5 4V5L9 9H5z"/></svg>',
+  vhi: '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M3 9v6h4l5 4V5L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>'
 };
 function spBuild() {
   var card = $('spot');
@@ -1207,7 +1275,8 @@ function spBuild() {
     '<div class="sp-play" id="spPlay" hidden><div class="sp-top"><div class="sp-art" id="spArt">♪</div><div class="sp-meta">' +
       '<div class="sp-t" id="spTitle"></div><div class="sp-a" id="spArtist"></div><button class="sp-dev" id="spDev"></button></div></div>' +
       '<div style="flex:none"><div class="sp-err" id="spErr2"></div><div class="sp-bar"><i id="spBar"></i></div>' +
-      '<div class="sp-ctl" style="margin-top:.7rem"><button id="spPrev" aria-label="Anterior">' + SPI.prev + '</button><button class="big" id="spPP" aria-label="Tocar ou pausar"></button><button id="spNext" aria-label="Seguinte">' + SPI.next + '</button></div></div>' +
+      '<div class="sp-ctl" style="margin-top:.7rem"><button id="spPrev" aria-label="Anterior">' + SPI.prev + '</button><button class="big" id="spPP" aria-label="Tocar ou pausar"></button><button id="spNext" aria-label="Seguinte">' + SPI.next + '</button></div>' +
+      '<div class="sp-vol" id="spVol" hidden><span>' + SPI.vlo + '</span><input type="range" id="spVolR" min="0" max="100" step="1" aria-label="Volume"><span>' + SPI.vhi + '</span></div></div>' +
     '</div>' +
     '<div class="sp-shelf" id="spShelf" hidden></div>' +
     '<div class="sp-devs" id="spDevs" hidden><h2><span>Tocar em</span><span><button id="spLibD">🎧 Biblioteca</button> <button id="spBack">Voltar</button></span></h2><div class="sp-dl" id="spDl"></div></div>';
@@ -1221,6 +1290,9 @@ function spBuild() {
   $('spBack').addEventListener('click', function () { sp.view = 'play'; clearTimeout(sp.devTimer); spRender(); });
   $('spPrev').addEventListener('click', function () { spCmd('POST', '/me/player/previous'); });
   $('spNext').addEventListener('click', function () { spCmd('POST', '/me/player/next'); });
+  var vr = $('spVolR');
+  vr.addEventListener('input', function () { sp.volT = Date.now(); spVolPaint(); clearTimeout(sp.volSend); sp.volSend = setTimeout(spVolSend, 250); });
+  vr.addEventListener('change', function () { sp.volT = Date.now(); clearTimeout(sp.volSend); spVolSend(); });
   $('spPP').addEventListener('click', function () {
     var st = sp.state, playing = !!(st && st.is_playing);
     if (st) { st.is_playing = !playing; sp.t = Date.now(); spRender(); }
@@ -1404,6 +1476,15 @@ function spPoll() {
   });
 }
 function spShow(id, on) { $(id).hidden = !on; }
+function spVolPaint() { var r = $('spVolR'); r.style.setProperty('--p', r.value + '%'); }
+function spVolSend() {
+  var v = +$('spVolR').value, st = sp.state;
+  if (st && st.device) st.device.volume_percent = v;
+  if (DEMO) return;
+  var d = st && st.device && st.device.id;
+  spApi('PUT', '/me/player/volume?volume_percent=' + v + (d ? '&device_id=' + encodeURIComponent(d) : '')).then(function () { sp.err = ''; })
+    .catch(function (e) { if (e.message === '401') return; sp.err = e.reason === 'VOLUME_CONTROL_DISALLOW' ? 'Este dispositivo não deixa mudar o volume' : e.reason === 'PREMIUM_REQUIRED' ? 'Precisa de Spotify Premium' : 'Não deu para mudar o volume'; spRender(); });
+}
 function spRender() {
   if (!SP_ON) return;
   var li = spLoggedIn(), st = sp.state, it = st && st.item;
@@ -1427,6 +1508,9 @@ function spRender() {
     $('spArtist').textContent = it.artists ? it.artists.map(function (a) { return a.name; }).join(', ') : (it.show && it.show.name) || '';
     $('spDev').textContent = (st.device && st.device.name ? '🔊 ' + st.device.name : 'Escolher dispositivo') + ' ▾';
     $('spPP').innerHTML = st.is_playing ? SPI.pause : SPI.play;
+    var vp = st.device ? st.device.volume_percent : null, vbox = $('spVol');
+    vbox.hidden = vp == null;
+    if (vp != null && Date.now() - (sp.volT || 0) > 3000) { $('spVolR').value = vp; spVolPaint(); }
     var imgs = (it.album && it.album.images) || it.images || [], u = imgs.length ? imgs[Math.min(1, imgs.length - 1)].url : '';
     var art = $('spArt'), cur = art.getElementsByTagName('img')[0];
     if (u && /^https:\/\//.test(u)) {
@@ -1445,7 +1529,7 @@ function spStart() {
   if (!SP_ON) return;
   spBuild();
   if (DEMO) {
-    sp.state = { is_playing: true, progress_ms: 70000, device: { name: 'Coluna da sala' }, item: { name: 'Música de exemplo', duration_ms: 214000, artists: [{ name: 'Artista de exemplo' }], album: { images: [] } } };
+    sp.state = { is_playing: true, progress_ms: 70000, device: { name: 'Coluna da sala', volume_percent: 40 }, item: { name: 'Música de exemplo', duration_ms: 214000, artists: [{ name: 'Artista de exemplo' }], album: { images: [] } } };
     sp.t = Date.now(); spRender();
   } else {
     spExchange().then(function () { spRender(); spPoll(); });
@@ -1650,6 +1734,293 @@ function homeLoad() {
   });
 }
 
+/* ---------- Futebol (resultados ao vivo, favoritos, classificações) ---------- */
+var FB_BASE = 'https://site.api.espn.com/apis/site/v2/sports/soccer/';
+var FB_LG = 'https://a.espncdn.com/i/leaguelogos/soccer/500-dark/';
+var FB_COMPS = [
+  { code: 'por.1', name: 'Liga Portugal', logo: 14, table: 1 },
+  { code: 'por.taca.portugal', name: 'Taça de Portugal', emoji: '🏆' },
+  { code: 'uefa.champions', name: 'Champions League', logo: 2, table: 1 },
+  { code: 'uefa.europa', name: 'Liga Europa', logo: 2310, table: 1 },
+  { code: 'uefa.europa.conf', name: 'Conference League', logo: 20296, table: 1 },
+  { code: 'eng.1', name: 'Premier League', logo: 23, table: 1 },
+  { code: 'esp.1', name: 'La Liga', logo: 15, table: 1 },
+  { code: 'ita.1', name: 'Serie A', logo: 12, table: 1 },
+  { code: 'ger.1', name: 'Bundesliga', logo: 10, table: 1 },
+  { code: 'fra.1', name: 'Ligue 1', logo: 9, table: 1 },
+  { code: 'ned.1', name: 'Eredivisie', table: 1, emoji: '⚽' },
+  { code: 'uefa.nations', name: 'Liga das Nações', logo: 2395, table: 1 },
+  { code: 'fifa.worldq.uefa', name: 'Qualificação Mundial', logo: 67, table: 1 }
+];
+var FB = { days: {}, logo: {}, tables: {}, sched: {}, fav: null, sel: { tab: 'jogos', filter: 'all', day: 0, tcomp: 'por.1' }, open: null, built: false, timer: null, loading: {} };
+
+function fbFavLoad() {
+  var f = null; try { f = JSON.parse(store('fb_fav') || 'null'); } catch (e) {}
+  if (!f || !f.teams) f = { teams: (C.FB_TEAMS || ['2250']).map(String), games: [] };
+  f.games = f.games || [];
+  return f;
+}
+function fbFavSave() { FB.fav.games = FB.fav.games.slice(-80); store('fb_fav', JSON.stringify(FB.fav)); }
+function fbIsFav(ev) { return FB.fav.games.indexOf(ev.id) >= 0 || FB.fav.teams.indexOf(ev.h.id) >= 0 || FB.fav.teams.indexOf(ev.a.id) >= 0; }
+function fbToggleGame(ev) {
+  var i = FB.fav.games.indexOf(ev.id);
+  if (i >= 0) FB.fav.games.splice(i, 1); else FB.fav.games.push(ev.id);
+  fbFavSave(); fbRender(); if (!$('fbM').hidden) fbPop();
+}
+function fbToggleTeam(id) {
+  var i = FB.fav.teams.indexOf(id);
+  if (i >= 0) FB.fav.teams.splice(i, 1); else { FB.fav.teams.push(id); fbSchedLoad(id, true); }
+  fbFavSave(); fbRender(); if (!$('fbM').hidden) fbPop();
+}
+
+function fbDs(off) { var d = new Date(); d.setDate(d.getDate() + (off || 0)); return d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()); }
+function fbSameDay(ts, off) { var d = new Date(ts), t = new Date(); t.setDate(t.getDate() + (off || 0)); return d.toDateString() === t.toDateString(); }
+function fbDayLabel(off) {
+  if (off === 0) return 'Hoje'; if (off === 1) return 'Amanhã'; if (off === -1) return 'Ontem';
+  var d = new Date(); d.setDate(d.getDate() + off); return WD3[d.getDay()] + ', ' + d.getDate() + ' ' + ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'][d.getMonth()];
+}
+function fbImg(url, cls) {
+  var i = document.createElement('img'); i.className = cls || 'fb-cr'; i.alt = ''; i.referrerPolicy = 'no-referrer'; i.decoding = 'async';
+  if (url && /^https:\/\//.test(url)) { i.src = url; i.addEventListener('error', function () { i.style.visibility = 'hidden'; }); } else i.style.visibility = 'hidden';
+  return i;
+}
+function fbComp(code) { for (var i = 0; i < FB_COMPS.length; i++) if (FB_COMPS[i].code === code) return FB_COMPS[i]; return { code: code, name: code, emoji: '⚽' }; }
+function fbCompIcon(c, cls) {
+  var url = c.logo ? FB_LG + c.logo + '.png' : (FB.logo[c.code] || '');
+  if (!url && c.emoji) return el('span', (cls || 'fb-ci') + ' em', c.emoji);
+  var i = fbImg(url, cls || 'fb-ci'); return i;
+}
+
+function fbNorm(e, code) {
+  var cp = (e.competitions || [])[0] || {}, cs = cp.competitors || [];
+  var h = cs.filter(function (x) { return x.homeAway === 'home'; })[0] || cs[0], a = cs.filter(function (x) { return x.homeAway === 'away'; })[0] || cs[1];
+  if (!h || !a) return null;
+  var st = e.status || cp.status || {}, ty = st.type || {};
+  function side(c) {
+    var t = c.team || {}, sc = c.score; if (sc && typeof sc === 'object') sc = sc.displayValue;
+    return { id: String(t.id), name: t.shortDisplayName || t.displayName || t.name || '?', logo: t.logo || ((t.logos || [])[0] || {}).href || '', score: sc != null && sc !== '' && !isNaN(+sc) ? +sc : null };
+  }
+  var ev = { id: String(e.id), comp: code || (e.league && e.league.slug) || '', date: Date.parse(e.date), state: ty.state || 'pre', clk: st.displayClock || '', det: ty.shortDetail || '', nm: ty.name || '', h: side(h), a: side(a), venue: (cp.venue || {}).fullName || '', ev: [] };
+  (cp.details || []).forEach(function (d) {
+    var tx = (d.type || {}).text || '', who = ((d.athletesInvolved || [])[0] || {}).shortName || ((d.athletesInvolved || [])[0] || {}).displayName || '';
+    var kind = d.redCard ? 'red' : d.yellowCard ? 'yellow' : d.scoringPlay ? (d.ownGoal ? 'og' : d.penaltyKick ? 'pen' : 'goal') : '';
+    if (kind) ev.ev.push({ k: kind, c: (d.clock || {}).displayValue || '', p: who, t: String((d.team || {}).id), tx: tx });
+  });
+  return ev;
+}
+function fbMin(ev) {
+  if (ev.state === 'in') { if (ev.nm === 'STATUS_HALFTIME' || ev.det === 'HT') return 'INT'; return ev.det && ev.det !== 'In Progress' ? ev.det : (ev.clk || 'AO VIVO'); }
+  if (ev.state === 'post') return /pen|aet|extra/i.test(ev.det) ? ev.det.replace(/^FT-?/i, '') : (/postp|cancel|suspend|abandon/i.test(ev.nm + ev.det) ? 'ADI' : 'FIM');
+  var d = new Date(ev.date); return pad(d.getHours()) + ':' + pad(d.getMinutes());
+}
+
+function fbGet(path) { return fetch(FB_BASE + path).then(function (r) { if (!r.ok) throw new Error(String(r.status)); return r.json(); }); }
+function fbScore(code, ds) {
+  return fbGet(code + '/scoreboard?dates=' + ds).then(function (j) {
+    var lg = (j.leagues || [])[0]; if (lg && lg.logos && lg.logos[0]) FB.logo[code] = lg.logos[0].href;
+    return (j.events || []).map(function (e) { return fbNorm(e, code); }).filter(Boolean);
+  });
+}
+function fbLoadDay(ds, codes) {
+  var day = FB.days[ds] = FB.days[ds] || { ev: {}, t: {}, any: 0 }, list = codes || FB_COMPS.map(function (c) { return c.code; });
+  return Promise.all(list.map(function (code) {
+    var k = ds + code; if (FB.loading[k]) return null; FB.loading[k] = 1;
+    return fbScore(code, ds).then(function (evs) { day.ev[code] = evs; day.t[code] = Date.now(); }).catch(function () { day.t[code] = Date.now() - 540000; }).then(function () { delete FB.loading[k]; });
+  })).then(function () { day.any = Object.keys(day.t).length ? 1 : 0; });
+}
+function fbSchedLoad(id, force) {
+  var s = FB.sched[id];
+  if (s && !force && Date.now() - s.t < 1800000) return;
+  FB.sched[id] = s = s || { fut: [], past: [], t: 0 }; s.t = Date.now();
+  var pick = function (j) { return (j.events || []).map(function (e) { return fbNorm(e, (e.league && e.league.slug) || ''); }).filter(Boolean); };
+  Promise.all([fbGet('all/teams/' + id + '/schedule?fixture=true').then(pick).catch(function () { return null; }), fbGet('all/teams/' + id + '/schedule').then(pick).catch(function () { return null; })]).then(function (r) {
+    if (r[0]) s.fut = r[0].sort(function (a, b) { return a.date - b.date; }).slice(0, 4);
+    if (r[1]) s.past = r[1].sort(function (a, b) { return b.date - a.date; }).slice(0, 2);
+    fbRender();
+  });
+}
+
+/* todos os jogos conhecidos de um dia */
+function fbDayEvents(ds) {
+  var day = FB.days[ds], out = []; if (!day) return out;
+  FB_COMPS.forEach(function (c) { (day.ev[c.code] || []).forEach(function (e) { out.push(e); }); });
+  return out;
+}
+function fbTick() {
+  if (document.hidden || isNight(new Date().getHours())) return;
+  var ds = fbDs(0), day = FB.days[ds], now = Date.now(), codes = [];
+  FB_COMPS.forEach(function (c) {
+    var evs = day && day.ev[c.code], t = day && day.t[c.code] || 0;
+    var hot = evs && evs.some(function (e) { return e.state === 'in' || (e.state === 'pre' && e.date - now < 1200000 && e.date - now > -3600000); });
+    if (!day || !evs || (hot && now - t > 25000) || now - t > 600000) codes.push(c.code);
+  });
+  if (!day || codes.length) fbLoadDay(ds, codes.length ? codes : null).then(function () { fbRender(); if (!$('fbM').hidden) fbPop(); });
+  FB.fav.teams.forEach(function (id) { fbSchedLoad(id); });
+}
+
+/* ---- cartão ---- */
+function fbRow(ev, opt) {
+  opt = opt || {};
+  var fav = fbIsFav(ev), r = el('div', 'fb-r' + (ev.state === 'in' ? ' live' : ''));
+  var t = el('span', 'fb-t'); t.appendChild(el('b', null, fbMin(ev)));
+  if (ev.state !== 'in' && !fbSameDay(ev.date, opt.dayOff || 0) && opt.showDay !== false) t.appendChild(el('small', null, WD3[new Date(ev.date).getDay()] + ' ' + new Date(ev.date).getDate()));
+  var h = el('span', 'fb-h'); h.appendChild(el('span', 'fb-n', ev.h.name)); h.appendChild(fbImg(ev.h.logo));
+  var sc = el('span', 'fb-s' + (ev.state === 'pre' ? ' u' : ''), ev.state === 'pre' ? 'vs' : (ev.h.score == null ? '–' : ev.h.score) + ' – ' + (ev.a.score == null ? '–' : ev.a.score));
+  var a = el('span', 'fb-a'); a.appendChild(fbImg(ev.a.logo)); a.appendChild(el('span', 'fb-n', ev.a.name));
+  var st = el('button', 'fb-st' + (fav ? ' on' : ''), fav ? '★' : '☆'); st.type = 'button'; st.setAttribute('aria-label', 'Favorito');
+  st.addEventListener('click', function (e) { e.stopPropagation(); fbToggleGame(ev); });
+  [t, h, sc, a, st].forEach(function (x) { r.appendChild(x); });
+  return r;
+}
+function fbCardEvents() {
+  var seen = {}, out = [], add = function (e) { if (!seen[e.id] && out.length < 4) { seen[e.id] = 1; out.push(e); } };
+  var today = fbDayEvents(fbDs(0)).filter(function (e) { return fbSameDay(e.date, 0) || e.state === 'in'; });
+  var byTime = function (a, b) { return a.date - b.date; };
+  today.filter(function (e) { return e.state === 'in' && fbIsFav(e); }).sort(byTime).forEach(add);
+  today.filter(function (e) { return e.state === 'in'; }).sort(byTime).forEach(add);
+  today.filter(function (e) { return fbIsFav(e); }).sort(byTime).forEach(add);
+  var fut = [], past = [];
+  FB.fav.teams.forEach(function (id) { var s = FB.sched[id]; if (s) { s.fut.forEach(function (e) { fut.push(e); }); s.past.forEach(function (e) { past.push(e); }); } });
+  fut.sort(byTime).filter(function (e) { return e.state === 'pre' && e.date > Date.now() - 3600000; }).forEach(add);
+  if (out.length < 4) past.sort(function (a, b) { return b.date - a.date; }).filter(function (e) { return e.state === 'post'; }).slice(0, 1).forEach(add);
+  return out;
+}
+function fbRender() {
+  var c = $('fut'); if (!c) return;
+  var evs = fbCardEvents(), live = evs.filter(function (e) { return e.state === 'in'; }).length, allLive = fbDayEvents(fbDs(0)).filter(function (e) { return e.state === 'in'; }).length;
+  clear(c);
+  var h = el('h2'); h.appendChild(el('span', null, '⚽ Futebol'));
+  if (allLive) { var p = el('span', 'fb-lv'); p.appendChild(el('i')); p.appendChild(document.createTextNode(allLive + ' AO VIVO')); h.appendChild(p); }
+  else h.appendChild(el('small', null, evs.length ? 'Favoritos ›' : 'Abrir ›'));
+  c.appendChild(h);
+  if (!evs.length) { c.appendChild(el('div', 'fb-empty', FB.days[fbDs(0)] && FB.days[fbDs(0)].any ? 'Sem jogos favoritos agora. Toca para ver todos.' : 'A carregar…')); return; }
+  evs.forEach(function (e) { c.appendChild(fbRow(e)); });
+  if (allLive > live) c.appendChild(el('div', 'fb-more', '+' + (allLive - live) + ' ao vivo noutras competições ›'));
+}
+
+/* ---- popup ---- */
+function fbOpen(filter) {
+  FB.sel.tab = 'jogos'; FB.sel.day = 0; FB.sel.filter = filter || 'all'; FB.open = null;
+  $('fbM').hidden = false; fbPop(); fbEnsureDay();
+  clearTimeout(FB.closeT); FB.closeT = setTimeout(fbClose, 300000);
+}
+function fbClose() { $('fbM').hidden = true; clearTimeout(FB.closeT); }
+function fbEnsureDay() {
+  var ds = fbDs(FB.sel.day), day = FB.days[ds];
+  if (!day || !day.any || Date.now() - Math.min.apply(null, FB_COMPS.map(function (c) { return day.t[c.code] || 0; })) > (FB.sel.day === 0 ? 60000 : 600000)) fbLoadDay(ds).then(function () { if (!$('fbM').hidden) fbPop(); fbRender(); });
+}
+function fbChip(label, on, fn, icon, badge) {
+  var b = el('button', on ? 'on' : null); b.type = 'button';
+  if (icon) b.appendChild(icon);
+  b.appendChild(document.createTextNode(label));
+  if (badge) b.appendChild(el('em', null, String(badge)));
+  b.addEventListener('click', fn); return b;
+}
+function fbPop() {
+  var b = $('fbB'), keep = b.querySelector('.fb-body'), top = keep ? keep.scrollTop : 0; clear(b);
+  var hd = el('div', 'md-h'); hd.appendChild(el('h3', null, '⚽ Futebol'));
+  if (FB.sel.tab === 'jogos') {
+    var dn = el('div', 'fb-dn'), pv = el('button', null, '‹'), nx = el('button', null, '›'), lb = el('b', null, fbDayLabel(FB.sel.day));
+    pv.type = nx.type = 'button'; pv.setAttribute('aria-label', 'Dia anterior'); nx.setAttribute('aria-label', 'Dia seguinte');
+    pv.addEventListener('click', function () { FB.sel.day--; FB.open = null; fbPop(); fbEnsureDay(); });
+    nx.addEventListener('click', function () { FB.sel.day++; FB.open = null; fbPop(); fbEnsureDay(); });
+    lb.addEventListener('click', function () { FB.sel.day = 0; FB.open = null; fbPop(); fbEnsureDay(); });
+    dn.appendChild(pv); dn.appendChild(lb); dn.appendChild(nx); hd.appendChild(dn);
+  }
+  var x = el('button', 'md-x', 'Fechar'); x.type = 'button'; x.addEventListener('click', fbClose); hd.appendChild(x); b.appendChild(hd);
+  var tabs = el('div', 'fb-tabs');
+  tabs.appendChild(fbChip('Jogos', FB.sel.tab === 'jogos', function () { FB.sel.tab = 'jogos'; fbPop(); fbEnsureDay(); }));
+  tabs.appendChild(fbChip('Classificação', FB.sel.tab === 'tab', function () { FB.sel.tab = 'tab'; fbPop(); }));
+  b.appendChild(tabs);
+  var chips = el('div', 'fb-chips');
+  if (FB.sel.tab === 'jogos') {
+    var nfav = fbDayEvents(fbDs(FB.sel.day)).filter(fbIsFav).length;
+    chips.appendChild(fbChip('★ Favoritos', FB.sel.filter === 'fav', function () { FB.sel.filter = 'fav'; fbPop(); }, null, nfav || 0));
+    chips.appendChild(fbChip('Todas', FB.sel.filter === 'all', function () { FB.sel.filter = 'all'; fbPop(); }));
+    FB_COMPS.forEach(function (c) { chips.appendChild(fbChip(c.name, FB.sel.filter === c.code, function () { FB.sel.filter = c.code; fbPop(); }, fbCompIcon(c, 'fb-ci'))); });
+  } else {
+    FB_COMPS.filter(function (c) { return c.table; }).forEach(function (c) { chips.appendChild(fbChip(c.name, FB.sel.tcomp === c.code, function () { FB.sel.tcomp = c.code; fbPop(); }, fbCompIcon(c, 'fb-ci'))); });
+  }
+  b.appendChild(chips);
+  var body = el('div', 'fb-body'); b.appendChild(body);
+  if (FB.sel.tab === 'jogos') fbBodyGames(body); else fbBodyTable(body);
+  body.scrollTop = top;
+  var act = chips.querySelector('.on'); if (act) chips.scrollLeft = Math.max(0, act.getBoundingClientRect().left - chips.getBoundingClientRect().left + chips.scrollLeft - 24);
+}
+function fbBodyGames(body) {
+  var ds = fbDs(FB.sel.day), day = FB.days[ds];
+  if (!day || !day.any) { body.appendChild(el('div', 'fb-empty', 'A carregar jogos…')); return; }
+  var evs = fbDayEvents(ds), f = FB.sel.filter;
+  if (f === 'fav') evs = evs.filter(fbIsFav); else if (f !== 'all') evs = evs.filter(function (e) { return e.comp === f; });
+  if (!evs.length) {
+    body.appendChild(el('div', 'fb-empty', f === 'fav' ? 'Sem jogos favoritos neste dia. Toca num jogo e segue uma equipa.' : 'Sem jogos neste dia.')); return;
+  }
+  FB_COMPS.forEach(function (c) {
+    var list = evs.filter(function (e) { return e.comp === c.code; }); if (!list.length) return;
+    list.sort(function (a, b) { return (b.state === 'in') - (a.state === 'in') || a.date - b.date; });
+    var g = el('div', 'fb-g'); g.appendChild(fbCompIcon(c, 'fb-ci')); g.appendChild(document.createTextNode(c.name)); body.appendChild(g);
+    list.forEach(function (e) {
+      var r = fbRow(e, { dayOff: FB.sel.day, showDay: false }); r.classList.add('tap'); if (fbIsFav(e)) r.classList.add('fav');
+      r.addEventListener('click', function () { FB.open = FB.open === e.id ? null : e.id; fbPop(); });
+      body.appendChild(r);
+      if (FB.open === e.id) body.appendChild(fbDetail(e));
+    });
+  });
+}
+function fbDetail(e) {
+  var d = el('div', 'fb-det');
+  var mk = function (x) {
+    var r = el('div', 'fb-ev' + (x.t === e.a.id ? ' r' : '')), ic = { goal: '⚽', pen: '⚽', og: '⚽', yellow: '🟨', red: '🟥' }[x.k] || '';
+    r.appendChild(el('b', null, x.c)); r.appendChild(el('span', null, ic + ' ' + (x.p || '') + (x.k === 'pen' ? ' (g.p.)' : x.k === 'og' ? ' (p.b.)' : '')));
+    return r;
+  };
+  if (e.ev.length) e.ev.forEach(function (x) { d.appendChild(mk(x)); });
+  else d.appendChild(el('div', 'fb-ev none', e.state === 'pre' ? 'Ainda não começou.' : 'Sem lances registados.'));
+  var ft = el('div', 'fb-ft'); if (e.venue) ft.appendChild(el('span', null, e.venue));
+  [e.h, e.a].forEach(function (t) {
+    var on = FB.fav.teams.indexOf(t.id) >= 0, bt = el('button', on ? 'on' : null, (on ? '★ A seguir ' : '☆ Seguir ') + t.name); bt.type = 'button';
+    bt.addEventListener('click', function (ev) { ev.stopPropagation(); fbToggleTeam(t.id); }); ft.appendChild(bt);
+  });
+  d.appendChild(ft); return d;
+}
+function fbBodyTable(body) {
+  var code = FB.sel.tcomp, t = FB.tables[code];
+  if (!t || Date.now() - t.t > 1800000) {
+    if (!t || !t.busy) {
+      FB.tables[code] = { t: t ? t.t : 0, busy: 1, rows: t && t.rows };
+      fetch('https://site.api.espn.com/apis/v2/sports/soccer/' + code + '/standings').then(function (r) { if (!r.ok) throw new Error(String(r.status)); return r.json(); }).then(function (j) {
+        var groups = (j.children || []).map(function (ch) {
+          return { name: ch.name || '', rows: (((ch.standings || {}).entries) || []).map(function (en, i) {
+            var s = {}; (en.stats || []).forEach(function (x) { s[x.name] = x.value != null ? x.value : x.displayValue; });
+            var tm = en.team || {};
+            return { id: String(tm.id), name: tm.shortDisplayName || tm.displayName || '?', logo: tm.logo || ((tm.logos || [])[0] || {}).href || '', rk: s.rank || i + 1, p: s.gamesPlayed, w: s.wins, d: s.ties, l: s.losses, gd: s.pointDifferential, pts: s.points };
+          }).sort(function (a, b) { return a.rk - b.rk; }) };
+        });
+        FB.tables[code] = { t: Date.now(), groups: groups };
+      }).catch(function () { FB.tables[code] = { t: Date.now() - 1500000, groups: null, err: 1 }; }).then(function () { if (!$('fbM').hidden && FB.sel.tab === 'tab') fbPop(); });
+    }
+    if (!t || !t.groups) { body.appendChild(el('div', 'fb-empty', t && t.err ? 'Sem classificação disponível.' : 'A carregar classificação…')); return; }
+  }
+  if (!t.groups || !t.groups.length) { body.appendChild(el('div', 'fb-empty', 'Sem classificação disponível.')); return; }
+  t.groups.forEach(function (g) {
+    if (t.groups.length > 1 && g.name) body.appendChild(el('div', 'fb-g', g.name));
+    var hd = el('div', 'fb-tr hd'); ['#', '', 'J', 'V', 'E', 'D', 'DG', 'Pts'].forEach(function (x, i) { hd.appendChild(el('span', i === 1 ? 'tm' : null, x)); }); body.appendChild(hd);
+    g.rows.forEach(function (r) {
+      var tr = el('div', 'fb-tr' + (FB.fav.teams.indexOf(r.id) >= 0 ? ' fav' : ''));
+      tr.appendChild(el('span', 'rk', String(r.rk)));
+      var tm = el('span', 'tm'); tm.appendChild(fbImg(r.logo)); tm.appendChild(el('span', null, r.name)); tr.appendChild(tm);
+      [r.p, r.w, r.d, r.l, r.gd > 0 ? '+' + r.gd : r.gd, r.pts].forEach(function (v, i) { tr.appendChild(el('span', i === 5 ? 'pt' : null, v == null ? '–' : String(v))); });
+      body.appendChild(tr);
+    });
+  });
+}
+function fbBuild() {
+  if (FB.built) return; FB.built = true; FB.fav = fbFavLoad();
+  var c = $('fut'); c.addEventListener('click', function () { fbOpen('fav'); });
+  fbRender();
+  fbTick(); setInterval(fbTick, 30000);
+}
+
 /* ---------- arranque ---------- */
 function loadAll() {
   loadWeather();
@@ -1659,6 +2030,7 @@ function loadAll() {
 }
 
 spStart();
+fbBuild();
 tickClock();
 setInterval(tickClock, 1000);
 renderAgenda();
